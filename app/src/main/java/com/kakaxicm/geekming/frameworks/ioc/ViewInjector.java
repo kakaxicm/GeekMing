@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
  * Created by kakaxicm on 2015/12/24.
  */
 public class ViewInjector {
-    public static void injectContentViewForActivity(Activity activity) {
+    private static void injectContentViewForActivity(Activity activity) {
         Class<? extends Activity> clazz = activity.getClass();
         ContentViewAnnotation annotation = clazz.getAnnotation(ContentViewAnnotation.class);
         if (annotation != null) {
@@ -31,7 +31,7 @@ public class ViewInjector {
         }
     }
 
-    public static void injectViewsForActivity(Activity activity) {
+    private static void injectViewsForActivity(Activity activity) {
         Class<? extends Activity> clazz = activity.getClass();
         Field[] fields = clazz.getDeclaredFields();
         for(Field field : fields) {
@@ -54,5 +54,10 @@ public class ViewInjector {
                 }
             }
         }
+    }
+
+    public static void injectView(Activity activity) {
+        injectContentViewForActivity(activity);
+        injectViewsForActivity(activity);
     }
 }
