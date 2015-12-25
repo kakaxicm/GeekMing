@@ -71,9 +71,9 @@ public abstract class UniversalAdapter<T> extends BaseAdapter{
             viewHolder = UniversalViewHolder.buildViewHolder(mContext, convertView, parent, mMultiTypeSurpport.getLayoutId(position, mData.get(position)));
         }
 
-        bindView(viewHolder, mData.get(position));
+        bindView(viewHolder, position, mData.get(position));
         return viewHolder.getConvertView();
     }
 
-    public abstract void bindView(UniversalViewHolder vh, T item);
+    public abstract void bindView(UniversalViewHolder vh, int postion, T item);
 }

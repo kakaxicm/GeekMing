@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.kakaxicm.geekming.CommonAdapterListViewActivity"/>
+        <activity android:name="com.kakaxicm.geekming.DownloadManagerActivity"/>
     </application>
 
 </manifest>

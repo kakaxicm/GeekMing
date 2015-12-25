@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -80,5 +81,10 @@ public class UniversalViewHolder {
     public void setImageView(int id, int resId) {
         ImageView img = getItemChildView(id);
         img.setImageResource(resId);
+    }
+
+    public void setProgressBar(int id, int progress) {
+        ProgressBar pb = getItemChildView(id);
+        pb.setProgress(progress);
     }
 }

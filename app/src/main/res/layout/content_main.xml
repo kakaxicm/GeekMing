@@ -4,9 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dp">
+
     <Button
         android:id="@+id/common_adapter_entry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Common Adapter Entry" />
+
+    <Button
+        android:id="@+id/download_manager_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Download Manager Entry" />
 </LinearLayout>

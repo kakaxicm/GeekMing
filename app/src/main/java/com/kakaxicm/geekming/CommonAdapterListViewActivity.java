@@ -1,12 +1,9 @@
 package com.kakaxicm.geekming;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.kakaxicm.geekming.domain.CommonDomain1;
-import com.kakaxicm.geekming.frameworks.ioc.ViewInjector;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ContentViewAnnotation;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ViewIdAnnotation;
 import com.kakaxicm.geekming.frameworks.universaladapter.MultiTypeSurpport;
@@ -59,7 +56,7 @@ public class CommonAdapterListViewActivity extends BaseActivity {
 
         UniversalAdapter<CommonDomain1> adapter = new UniversalAdapter<CommonDomain1>(this, mData, mMultiType) {
             @Override
-            public void bindView(UniversalViewHolder vh, CommonDomain1 item) {
+            public void bindView(UniversalViewHolder vh, int postion, CommonDomain1 item) {
                 switch (vh.getmLayoutId()) {
                     case R.layout.item1_conmon_list:
                         vh.setTextView(R.id.tv1, item.getS1());
