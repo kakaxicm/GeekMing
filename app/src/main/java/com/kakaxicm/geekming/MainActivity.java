@@ -3,7 +3,6 @@ package com.kakaxicm.geekming;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.kakaxicm.geekming.frameworks.ioc.ViewInjector;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ContentViewAnnotation;
@@ -11,6 +10,7 @@ import com.kakaxicm.geekming.frameworks.ioc.annotions.ViewIdAnnotation;
 
 @ContentViewAnnotation(value = R.layout.content_main)
 public class MainActivity extends Activity implements View.OnClickListener{
+
     @ViewIdAnnotation(value = R.id.common_adapter_entry)
     private View mCommenAdapterEntryView;
 
@@ -24,6 +24,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        Toast.makeText(this, "hahah", Toast.LENGTH_LONG).show();
+        switch (v.getId()) {
+            case R.id.common_adapter_entry:
+                //todo 跳转
+                break;
+            default:
+                break;
+        }
     }
 }
