@@ -31,7 +31,7 @@ public class UniversalViewHolder {
 
 
     /**
-     * whether convertView is reused, return a viewholder
+     * whether convertView is reused or not, return a viewholder
      */
     public static UniversalViewHolder buildViewHolder(Context context, View convertView, ViewGroup parent, int layoutId) {
         if (convertView == null) {
