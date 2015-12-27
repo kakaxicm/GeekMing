@@ -146,7 +146,7 @@ public class DownloadManager {
     /**
      *从数据库中冷启动下载任务，加入该任务已经在调度队列中，则走正常的restart方法
      */
-    public synchronized void restartDownloadTaskFromDb(DownloadTaskInfo taskInfo) {
+    public synchronized void restartDownloadTask(DownloadTaskInfo taskInfo) {
         //1.判断该任务是否处于调度中
         //  1.1 处于则直接restart
         //  1.2.不处于, 则

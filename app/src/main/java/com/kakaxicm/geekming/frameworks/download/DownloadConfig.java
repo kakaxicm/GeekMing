@@ -14,6 +14,6 @@ public class DownloadConfig {
 	public static int HTTP_SO_TIMEOUT = 40 * 1000;
 	public static int HTTP_SOCKET_BUFFER_SIZE = 8 * 1024;
 
-	public static final String DOWNLOAD_PATH = "sdcard/aavideo_download/";
+	public static final String DOWNLOAD_PATH = "sdcard/geek_download/";
 	
 }
