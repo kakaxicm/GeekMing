@@ -12,12 +12,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private View mCommenAdapterEntryView;
     @ViewIdAnnotation(value = R.id.download_manager_entry)
     private View mDownloadManagerEntry;
+    @ViewIdAnnotation(value = R.id.custom_viewgroup_entry)
+    private View mCustomViewGroupEntry;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mCommenAdapterEntryView.setOnClickListener(this);
         mDownloadManagerEntry.setOnClickListener(this);
+        mCustomViewGroupEntry.setOnClickListener(this);
     }
 
     @Override
@@ -30,6 +34,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 break;
             case R.id.download_manager_entry:
                 intent = new Intent(this, DownloadManagerActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.custom_viewgroup_entry:
+                intent = new Intent(this, CustomViewGroupEntryActivity.class);
                 startActivity(intent);
                 break;
             default:
