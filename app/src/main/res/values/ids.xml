@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="id_sliding_title_head" type="id"/>
+    <item name="id_sliding_title_foot" type="id"/>
+    <item name="id_vertical_arrow" type="id"/>
+</resources>

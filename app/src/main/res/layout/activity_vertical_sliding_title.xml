@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.kakaxicm.geekming.frameworks.widgets.VerticalSlidingTitleLayout
+        android:id="@+id/id_sliding_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00000000">
+        <LinearLayout
+            android:id="@id/id_sliding_title_head"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="我是隐藏的头部"
+                android:gravity="center"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@id/id_sliding_title_foot"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#44ff0000"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="我是显示的底部"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:layout_gravity="center_vertical"/>
+
+                <com.kakaxicm.geekming.frameworks.widgets.VerticalArrowView
+                    android:id="@id/id_vertical_arrow"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:padding="4dp"/>
+                </LinearLayout>
+
+    </com.kakaxicm.geekming.frameworks.widgets.VerticalSlidingTitleLayout>
+</RelativeLayout>
