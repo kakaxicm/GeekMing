@@ -21,11 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CommonAdapterListViewActivity"/>
-        <activity android:name=".DownloadManagerActivity"/>
-        <activity android:name=".CustomViewGroupEntryActivity"/>
-        <activity android:name=".VerticalSlidingTitleActivity"/>
-        <activity android:name=".FlowLayoutActivity"/>
+        <activity android:name="com.kakaxicm.geekming.CommonAdapterListViewActivity"/>
+        <activity android:name="com.kakaxicm.geekming.DownloadManagerActivity"/>
     </application>
 
 </manifest>
