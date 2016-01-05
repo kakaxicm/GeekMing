@@ -16,12 +16,15 @@ public class CustomViewGroupEntryActivity extends BaseActivity{
     private View mVerticalSlidingTitleEntry;
     @ViewIdAnnotation(value = R.id.flow_layout_entry)
     private View mFlowLayoutEntry;
+    @ViewIdAnnotation(value = R.id.bubble_imageview_entry)
+    private View mShapeBitmapViewEntry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mVerticalSlidingTitleEntry.setOnClickListener(this);
         mFlowLayoutEntry.setOnClickListener(this);
+        mShapeBitmapViewEntry.setOnClickListener(this);
     }
 
     @Override
@@ -34,6 +37,10 @@ public class CustomViewGroupEntryActivity extends BaseActivity{
                 break;
             case R.id.flow_layout_entry:
                 intent.setClass(mContext, FlowLayoutActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.bubble_imageview_entry:
+                intent.setClass(mContext, ShapeBitmapActivity.class);
                 startActivity(intent);
                 break;
             default:

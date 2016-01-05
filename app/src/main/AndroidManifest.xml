@@ -25,6 +25,7 @@
         <activity android:name=".DownloadManagerActivity"/>
         <activity android:name=".CustomViewGroupEntryActivity"/>
         <activity android:name=".FlowLayoutActivity"/>
+        <activity android:name=".ShapeBitmapActivity"/>
     </application>
 
 </manifest>
