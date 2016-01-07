@@ -52,13 +52,17 @@ public class BitmapShapeView extends View{
         canvas.restore();
     }
 
+
+    //为了避免平铺的重复效果，view的大小不能大于BP的尺寸,这里强制为BP的尺寸
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(mBitmap.getWidth(), mBitmap.getHeight());
-        mPath.reset();
+
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
+
+        mPath.reset();
         mPath.moveTo(0, mBubbleRadius);
         mPath.arcTo(new RectF(0, 0, mBubbleRadius*2, mBubbleRadius*2), 180, 90);
         mPath.lineTo(width - mBubbleRadius + mTriangleSize, 0);
@@ -77,11 +81,13 @@ public class BitmapShapeView extends View{
     public void setImageSrc(String path) {
         mBitmap = BitmapFactory.decodeFile(path);
         mBitmapShader = new BitmapShader(mBitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+        requestLayout();//注意！！！！！！！图片的尺寸决定了该View的尺寸,所以设置图片的时候，图片尺寸发生变化，所以需要告诉父布局重新计算自己的尺寸和布局
         invalidate();
     }
 
     public void setImageSrc(int resId) {
         mBitmap = BitmapFactory.decodeResource(getResources(), resId);
         mBitmapShader = new BitmapShader(mBitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+        requestLayout();
     }
 }
