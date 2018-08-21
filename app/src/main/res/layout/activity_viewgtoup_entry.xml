@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <Button
         android:id="@+id/vertical_sliding_title_entry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Vertical Sliding Title" />
+
     <Button
         android:id="@+id/flow_layout_entry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Flow Layout" />
+
     <Button
         android:id="@+id/bubble_imageview_entry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Shape Bitmap Entry" />
+
+    <Button
+        android:id="@+id/behavior_entry1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Behavior Entry1" />
 </LinearLayout>
