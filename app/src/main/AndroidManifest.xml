@@ -38,6 +38,9 @@
         <activity
             android:name=".FloatHeaderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".StickHeaderViewPageActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

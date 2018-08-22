@@ -24,6 +24,8 @@ public class CustomViewGroupEntryActivity extends BaseActivity{
     private View mBehaviorEntry2;
     @ViewIdAnnotation(value = R.id.floating_head_entry)
     private View mFloatingHeadEntry;
+    @ViewIdAnnotation(value = R.id.floating_sticky_viewpager_entry)
+    private View mStickyHeadViewPagerEntry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class CustomViewGroupEntryActivity extends BaseActivity{
         mBehaviorEntry1.setOnClickListener(this);
         mBehaviorEntry2.setOnClickListener(this);
         mFloatingHeadEntry.setOnClickListener(this);
+        mStickyHeadViewPagerEntry.setOnClickListener(this);
     }
 
     @Override
@@ -62,6 +65,10 @@ public class CustomViewGroupEntryActivity extends BaseActivity{
                 break;
             case R.id.floating_head_entry:
                 intent.setClass(mContext, FloatHeaderActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.floating_sticky_viewpager_entry:
+                intent.setClass(mContext, StickHeaderViewPageActivity.class);
                 startActivity(intent);
                 break;
             default:
