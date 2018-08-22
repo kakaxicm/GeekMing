@@ -20,6 +20,8 @@ public class CustomViewGroupEntryActivity extends BaseActivity{
     private View mShapeBitmapViewEntry;
     @ViewIdAnnotation(value = R.id.behavior_entry1)
     private View mBehaviorEntry1;
+    @ViewIdAnnotation(value = R.id.behavior_entry2)
+    private View mBehaviorEntry2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class CustomViewGroupEntryActivity extends BaseActivity{
         mFlowLayoutEntry.setOnClickListener(this);
         mShapeBitmapViewEntry.setOnClickListener(this);
         mBehaviorEntry1.setOnClickListener(this);
+        mBehaviorEntry2.setOnClickListener(this);
     }
 
     @Override
@@ -48,6 +51,10 @@ public class CustomViewGroupEntryActivity extends BaseActivity{
                 break;
             case R.id.behavior_entry1:
                 intent.setClass(mContext, Behavior1Activity.class);
+                startActivity(intent);
+                break;
+            case R.id.behavior_entry2:
+                intent.setClass(mContext, Behavior2Activity.class);
                 startActivity(intent);
                 break;
             default:

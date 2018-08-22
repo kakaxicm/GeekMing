@@ -32,6 +32,9 @@
         <activity
             android:name=".Behavior1Activity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Behavior2Activity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

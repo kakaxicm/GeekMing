@@ -7,13 +7,12 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 import com.kakaxicm.geekming.R;
 
 /**
  * Created by chenming on 2018/8/21
- * 一个子View控制另外一个子View
+ * 某个view监听另一个view的状态变化，例如大小、位置、显示状态等
  */
 public class DependencyBehavior extends CoordinatorLayout.Behavior<View> {
     private int mPreOffset;//记录上一次控制View的位置
@@ -22,6 +21,13 @@ public class DependencyBehavior extends CoordinatorLayout.Behavior<View> {
         super(context, attrs);
     }
 
+    /**
+     * 控制view dependency的查找条件
+     * @param parent CoordinatorLayout
+     * @param child 受控制的View
+     * @param dependency 控制View
+     * @return 控制View dependency的查找条件
+     */
     @Override
     public boolean layoutDependsOn(CoordinatorLayout parent, View child, View dependency) {
         return dependency.getId() == R.id.depentent;
