@@ -33,4 +33,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Behavior Entry2" />
+
+    <Button
+        android:id="@+id/floating_head_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="悬浮Head布局" />
 </LinearLayout>

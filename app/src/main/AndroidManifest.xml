@@ -35,6 +35,9 @@
         <activity
             android:name=".Behavior2Activity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".FloatHeaderActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
