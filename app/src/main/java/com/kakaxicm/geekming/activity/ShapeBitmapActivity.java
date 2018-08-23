@@ -1,7 +1,9 @@
-package com.kakaxicm.geekming;
+package com.kakaxicm.geekming.activity;
 
 import android.os.Bundle;
 
+import com.kakaxicm.geekming.R;
+import com.kakaxicm.geekming.activity.BaseActivity;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ContentViewAnnotation;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ViewIdAnnotation;
 import com.kakaxicm.geekming.frameworks.widgets.BitmapShapeView;
@@ -10,7 +12,7 @@ import com.kakaxicm.geekming.frameworks.widgets.BitmapShapeView;
  * Created by star on 16/1/5.
  */
 @ContentViewAnnotation(value = R.layout.activity_shape_bitmap_view)
-public class ShapeBitmapActivity extends BaseActivity{
+public class ShapeBitmapActivity extends BaseActivity {
     @ViewIdAnnotation(value = R.id.shape_view)
     private BitmapShapeView mBitmapShapeView;
     @Override

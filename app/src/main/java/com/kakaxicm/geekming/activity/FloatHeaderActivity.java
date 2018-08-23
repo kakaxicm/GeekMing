@@ -1,10 +1,11 @@
-package com.kakaxicm.geekming;
+package com.kakaxicm.geekming.activity;
 
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.kakaxicm.geekming.R;
+import com.kakaxicm.geekming.activity.BaseActivity;
 import com.kakaxicm.geekming.frameworks.rcvadapter.UniversalRcvAdapter;
 import com.kakaxicm.geekming.frameworks.rcvadapter.UniversalRcvViewHolder;
 

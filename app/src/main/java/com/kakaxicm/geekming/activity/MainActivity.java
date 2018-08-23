@@ -1,7 +1,9 @@
-package com.kakaxicm.geekming;
+package com.kakaxicm.geekming.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.kakaxicm.geekming.R;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ContentViewAnnotation;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ViewIdAnnotation;
 

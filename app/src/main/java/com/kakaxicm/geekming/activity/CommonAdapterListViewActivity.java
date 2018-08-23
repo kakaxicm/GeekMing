@@ -1,8 +1,10 @@
-package com.kakaxicm.geekming;
+package com.kakaxicm.geekming.activity;
 
 import android.os.Bundle;
 import android.widget.ListView;
 
+import com.kakaxicm.geekming.R;
+import com.kakaxicm.geekming.activity.BaseActivity;
 import com.kakaxicm.geekming.domain.CommonDomain1;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ContentViewAnnotation;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ViewIdAnnotation;

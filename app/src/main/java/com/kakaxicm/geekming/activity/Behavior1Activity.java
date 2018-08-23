@@ -1,17 +1,19 @@
-package com.kakaxicm.geekming;
+package com.kakaxicm.geekming.activity;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+
+import com.kakaxicm.geekming.R;
+import com.kakaxicm.geekming.activity.BaseActivity;
 
 /**
  * Created by chenming on 2018/8/21
  * Behavior案例1：一个view的状态依赖另一个view
  */
-public class Behavior1Activity extends BaseActivity{
+public class Behavior1Activity extends BaseActivity {
     private int curY;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

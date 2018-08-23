@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.kakaxicm.geekming.FloatHeaderActivity">
+    tools:context="com.kakaxicm.geekming.activity.FloatHeaderActivity">
     <!--整个头部布局-->
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

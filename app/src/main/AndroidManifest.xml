@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -23,24 +23,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CommonAdapterListViewActivity" />
-        <activity android:name=".DownloadManagerActivity" />
-        <activity android:name=".CustomViewGroupEntryActivity" />
-        <activity android:name=".VerticalSlidingTitleActivity" />
-        <activity android:name=".FlowLayoutActivity" />
-        <activity android:name=".ShapeBitmapActivity" />
+        <activity android:name=".activity.CommonAdapterListViewActivity" />
+        <activity android:name=".activity.DownloadManagerActivity" />
+        <activity android:name=".activity.CustomViewGroupEntryActivity" />
+        <activity android:name=".activity.VerticalSlidingTitleActivity" />
+        <activity android:name=".activity.FlowLayoutActivity" />
+        <activity android:name=".activity.ShapeBitmapActivity" />
         <activity
-            android:name=".Behavior1Activity"
+            android:name=".activity.Behavior1Activity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Behavior2Activity"
+            android:name=".activity.Behavior2Activity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".FloatHeaderActivity"
+            android:name=".activity.FloatHeaderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".StickHeaderViewPageActivity"
+            android:name=".activity.StickHeaderViewPageActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.CardContainerActivity" />
     </application>
 
 </manifest>

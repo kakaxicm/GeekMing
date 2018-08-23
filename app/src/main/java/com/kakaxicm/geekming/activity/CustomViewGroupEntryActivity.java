@@ -1,9 +1,10 @@
-package com.kakaxicm.geekming;
+package com.kakaxicm.geekming.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.kakaxicm.geekming.R;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ContentViewAnnotation;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ViewIdAnnotation;
 
@@ -11,7 +12,7 @@ import com.kakaxicm.geekming.frameworks.ioc.annotions.ViewIdAnnotation;
  * Created by star on 15/12/30.
  */
 @ContentViewAnnotation(value = R.layout.activity_viewgtoup_entry)
-public class CustomViewGroupEntryActivity extends BaseActivity{
+public class CustomViewGroupEntryActivity extends BaseActivity {
     @ViewIdAnnotation(value = R.id.vertical_sliding_title_entry)
     private View mVerticalSlidingTitleEntry;
     @ViewIdAnnotation(value = R.id.flow_layout_entry)
@@ -26,6 +27,8 @@ public class CustomViewGroupEntryActivity extends BaseActivity{
     private View mFloatingHeadEntry;
     @ViewIdAnnotation(value = R.id.floating_sticky_viewpager_entry)
     private View mStickyHeadViewPagerEntry;
+    @ViewIdAnnotation(value = R.id.floating_sticky_card_entry)
+    private View mCardLayoutEntry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,7 @@ public class CustomViewGroupEntryActivity extends BaseActivity{
         mBehaviorEntry2.setOnClickListener(this);
         mFloatingHeadEntry.setOnClickListener(this);
         mStickyHeadViewPagerEntry.setOnClickListener(this);
+        mCardLayoutEntry.setOnClickListener(this);
     }
 
     @Override
@@ -69,6 +73,10 @@ public class CustomViewGroupEntryActivity extends BaseActivity{
                 break;
             case R.id.floating_sticky_viewpager_entry:
                 intent.setClass(mContext, StickHeaderViewPageActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.floating_sticky_card_entry:
+                intent.setClass(mContext, CardContainerActivity.class);
                 startActivity(intent);
                 break;
             default:

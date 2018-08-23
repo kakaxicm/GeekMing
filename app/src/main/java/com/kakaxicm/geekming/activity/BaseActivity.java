@@ -1,4 +1,4 @@
-package com.kakaxicm.geekming;
+package com.kakaxicm.geekming.activity;
 
 import android.app.Activity;
 import android.content.Context;
