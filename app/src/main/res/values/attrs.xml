@@ -5,4 +5,8 @@
         <attr name="bubbleTriangleSize" format="dimension"/>
     </declare-styleable>
 
+    <declare-styleable name="SlidingCardView">
+        <attr name="card_color" format="color"/>
+        <attr name="card_text" format="string"/>
+    </declare-styleable>
 </resources>

@@ -41,7 +41,9 @@
         <activity
             android:name=".activity.StickHeaderViewPageActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.CardContainerActivity" />
+        <activity
+            android:name=".activity.CardContainerActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
