@@ -50,5 +50,11 @@
         android:id="@+id/floating_sticky_card_entry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="卡片布局" />
+        android:text="Behavior卡片布局" />
+
+    <Button
+        android:id="@+id/scroller_sticky_card_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Scroller实现StickyLayout" />
 </LinearLayout>

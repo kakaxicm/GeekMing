@@ -44,6 +44,10 @@
         <activity
             android:name=".activity.CardContainerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.ScrollerStickyLayoutActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

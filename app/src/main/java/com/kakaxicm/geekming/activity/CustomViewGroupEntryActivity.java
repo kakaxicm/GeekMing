@@ -29,6 +29,8 @@ public class CustomViewGroupEntryActivity extends BaseActivity {
     private View mStickyHeadViewPagerEntry;
     @ViewIdAnnotation(value = R.id.floating_sticky_card_entry)
     private View mCardLayoutEntry;
+    @ViewIdAnnotation(value = R.id.scroller_sticky_card_entry)
+    private View mScrollerStickyLayoutEntry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class CustomViewGroupEntryActivity extends BaseActivity {
         mFloatingHeadEntry.setOnClickListener(this);
         mStickyHeadViewPagerEntry.setOnClickListener(this);
         mCardLayoutEntry.setOnClickListener(this);
+        mScrollerStickyLayoutEntry.setOnClickListener(this);
     }
 
     @Override
@@ -77,6 +80,10 @@ public class CustomViewGroupEntryActivity extends BaseActivity {
                 break;
             case R.id.floating_sticky_card_entry:
                 intent.setClass(mContext, CardContainerActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.scroller_sticky_card_entry:
+                intent.setClass(mContext, ScrollerStickyLayoutActivity.class);
                 startActivity(intent);
                 break;
             default:
