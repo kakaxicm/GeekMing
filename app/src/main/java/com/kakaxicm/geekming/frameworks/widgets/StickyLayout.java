@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -93,6 +94,137 @@ public class StickyLayout extends LinearLayout {
         mTopViewHeight = mTop.getMeasuredHeight();
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        int action = ev.getAction();
+        float y = ev.getY();
+
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                mLastY = y;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                float dy = y - mLastY;
+                getCurrentScrollView();
+
+                if (mInnerScrollView instanceof ScrollView) {
+                    if (mInnerScrollView.getScrollY() == 0 && isTopHidden && dy > 0
+                            && !isInControl) {
+                        isInControl = true;
+                        ev.setAction(MotionEvent.ACTION_CANCEL);
+                        MotionEvent ev2 = MotionEvent.obtain(ev);
+                        dispatchTouchEvent(ev);
+                        ev2.setAction(MotionEvent.ACTION_DOWN);
+                        return dispatchTouchEvent(ev2);
+                    }
+                } else if (mInnerScrollView instanceof ListView) {
+
+                    ListView lv = (ListView) mInnerScrollView;
+                    View c = lv.getChildAt(lv.getFirstVisiblePosition());
+
+                    if (!isInControl && c != null && c.getTop() == 0 && isTopHidden
+                            && dy > 0) {
+                        isInControl = true;
+                        ev.setAction(MotionEvent.ACTION_CANCEL);
+                        MotionEvent ev2 = MotionEvent.obtain(ev);
+                        dispatchTouchEvent(ev);
+                        ev2.setAction(MotionEvent.ACTION_DOWN);
+                        return dispatchTouchEvent(ev2);
+                    }
+                } else if (mInnerScrollView instanceof RecyclerView) {
+
+                    RecyclerView rv = (RecyclerView) mInnerScrollView;
+
+//                    if (!isInControl && android.support.v4.view.ViewCompat.canScrollVertically(rv, -1) && isTopHidden
+//                            && dy > 0) {
+//                        isInControl = true;
+//                        ev.setAction(MotionEvent.ACTION_CANCEL);
+//                        MotionEvent ev2 = MotionEvent.obtain(ev);
+//                        dispatchTouchEvent(ev);
+//                        ev2.setAction(MotionEvent.ACTION_DOWN);
+//                        return dispatchTouchEvent(ev2);
+//                    }
+                }
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    /**
+     * 拦截事件
+     * 1.如果我们的顶部view没有完全隐藏，拦截事件；
+     * 2.顶部View彻底隐藏，切子View无法向下滑动时，拦截事件
+     *
+     * @param ev
+     * @return
+     */
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        int action = ev.getAction();
+        float y = ev.getY();
+
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                mLastY = y;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                float dy = y - mLastY;
+
+                getCurrentScrollView();
+                //滚动View分三种情况处理
+                if (Math.abs(dy) > mTouchSlop) {
+                    mDragging = true;
+                    if (mInnerScrollView instanceof ScrollView) {
+                        // 如果topView没有隐藏
+                        // 或sc的scrollY = 0 && topView隐藏 && 下拉，则拦截
+                        if (!isTopHidden
+                                || (mInnerScrollView.getScrollY() == 0
+                                && isTopHidden && dy > 0)) {
+
+                            initVelocityTrackerIfNotExists();
+                            mVelocityTracker.addMovement(ev);
+                            mLastY = y;
+                            return true;
+                        }
+                    } else if (mInnerScrollView instanceof ListView) {
+
+                        ListView lv = (ListView) mInnerScrollView;
+                        View c = lv.getChildAt(lv.getFirstVisiblePosition());
+                        // 如果topView没有隐藏
+                        // 或sc的listView在顶部 && topView隐藏 && 下拉，则拦截
+
+                        if (!isTopHidden || //
+                                (c != null //
+                                        && c.getTop() == 0//
+                                        && isTopHidden && dy > 0)) {
+
+                            initVelocityTrackerIfNotExists();
+                            mVelocityTracker.addMovement(ev);
+                            mLastY = y;
+                            return true;
+                        }
+                    } else if (mInnerScrollView instanceof RecyclerView) {
+                        RecyclerView rv = (RecyclerView) mInnerScrollView;
+                        if (!isTopHidden ||
+                                (!ViewCompat.canScrollVertically(rv, -1) && isTopHidden && dy > 0)) {
+                            initVelocityTrackerIfNotExists();
+                            mVelocityTracker.addMovement(ev);
+                            mLastY = y;
+                            return true;
+                        }
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                mDragging = false;
+                recycleVelocityTracker();
+                break;
+        }
+
+        return super.onInterceptHoverEvent(ev);
+    }
+
     /**
      * onTouchEvent处理这个layout的滚动,拦截后走这个方法
      *
@@ -164,78 +296,6 @@ public class StickyLayout extends LinearLayout {
         invalidate();
     }
 
-    /**
-     * 拦截事件
-     * 1.如果我们的顶部view没有完全隐藏，拦截事件；
-     * 2.顶部View彻底隐藏，切子View无法向下滑动时，拦截事件
-     * @param ev
-     * @return
-     */
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        int action = ev.getAction();
-        float y = ev.getY();
-
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                mLastY = y;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                float dy = y - mLastY;
-
-                getCurrentScrollView();
-                //滚动View分三种情况处理
-                if (Math.abs(dy) > mTouchSlop) {
-                    mDragging = true;
-                    if (mInnerScrollView instanceof ScrollView) {
-                        // 如果topView没有隐藏
-                        // 或sc的scrollY = 0 && topView隐藏 && 下拉，则拦截
-                        if (!isTopHidden
-                                || (mInnerScrollView.getScrollY() == 0
-                                && isTopHidden && dy > 0)) {
-
-                            initVelocityTrackerIfNotExists();
-                            mVelocityTracker.addMovement(ev);
-                            mLastY = y;
-                            return true;
-                        }
-                    } else if (mInnerScrollView instanceof ListView) {
-
-                        ListView lv = (ListView) mInnerScrollView;
-                        View c = lv.getChildAt(lv.getFirstVisiblePosition());
-                        // 如果topView没有隐藏
-                        // 或sc的listView在顶部 && topView隐藏 && 下拉，则拦截
-
-                        if (!isTopHidden || //
-                                (c != null //
-                                        && c.getTop() == 0//
-                                        && isTopHidden && dy > 0)) {
-
-                            initVelocityTrackerIfNotExists();
-                            mVelocityTracker.addMovement(ev);
-                            mLastY = y;
-                            return true;
-                        }
-                    } else if (mInnerScrollView instanceof RecyclerView) {
-                        RecyclerView rv = (RecyclerView) mInnerScrollView;
-                        if (!isTopHidden || (!android.support.v4.view.ViewCompat.canScrollVertically(rv, -1) && isTopHidden && dy > 0)) {
-                            initVelocityTrackerIfNotExists();
-                            mVelocityTracker.addMovement(ev);
-                            mLastY = y;
-                            return true;
-                        }
-                    }
-                }
-                break;
-            case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_UP:
-                mDragging = false;
-                recycleVelocityTracker();
-                break;
-        }
-
-        return super.onInterceptHoverEvent(ev);
-    }
     //初始化速度跟踪器
     private void initVelocityTrackerIfNotExists() {
         if (mVelocityTracker == null) {
