@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -14,7 +16,9 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.OverScroller;
+import android.widget.ScrollView;
 
 import com.kakaxicm.geekming.R;
 
@@ -39,6 +43,8 @@ public class StickyLayout extends LinearLayout {
     private ViewGroup mInnerScrollView;
     private boolean isTopHidden;
 
+    private boolean isInControl = false;
+
     public StickyLayout(Context context) {
         super(context, null);
     }
@@ -52,9 +58,9 @@ public class StickyLayout extends LinearLayout {
                 .getScaledMaximumFlingVelocity();
         mMinimumVelocity = ViewConfiguration.get(context)
                 .getScaledMinimumFlingVelocity();
-        if (mVelocityTracker == null) {
-            mVelocityTracker = VelocityTracker.obtain();
-        }
+//        if (mVelocityTracker == null) {
+//            mVelocityTracker = VelocityTracker.obtain();
+//        }
     }
 
     private void recycleVelocityTracker() {
@@ -70,7 +76,6 @@ public class StickyLayout extends LinearLayout {
         mTop = findViewById(R.id.id_stickynavlayout_topview);
         mNav = findViewById(R.id.id_stickynavlayout_indicator);
         mViewPager = findViewById(R.id.id_stickynavlayout_viewpager);
-        ;
     }
 
     @Override
@@ -88,6 +93,68 @@ public class StickyLayout extends LinearLayout {
     }
 
     /**
+     * 处理下滑时，子View不能滑动的时候 拉出头部布局
+     *
+     * @param ev
+     * @return
+     */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        int action = ev.getAction();
+        float y = ev.getY();
+
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                mLastY = y;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                float dy = y - mLastY;
+                getCurrentScrollView();
+                //子滑动View无法继续向下滑动
+                if (mInnerScrollView instanceof ScrollView) {
+                    if (mInnerScrollView.getScrollY() == 0 && isTopHidden && dy > 0 && !isInControl) {
+                        isInControl = true;//只执行一次的标记
+                        ev.setAction(MotionEvent.ACTION_CANCEL);
+                        MotionEvent ev2 = MotionEvent.obtain(ev);
+                        //发送取消事件重置触摸状态
+                        dispatchTouchEvent(ev);
+                        //在发射Down事件
+                        ev2.setAction(MotionEvent.ACTION_DOWN);
+                        //继续调用本方法，重新事件分发,此时isInControl=true，不会再进到这段代码
+                        return dispatchTouchEvent(ev2);
+                    }
+                } else if (mInnerScrollView instanceof ListView) {
+                    ListView lv = (ListView) mInnerScrollView;
+                    View c = lv.getChildAt(lv.getFirstVisiblePosition());
+                    if (!isInControl && c != null && c.getTop() == 0 && isTopHidden
+                            && dy > 0) {
+                        isInControl = true;
+                        ev.setAction(MotionEvent.ACTION_CANCEL);
+                        MotionEvent ev2 = MotionEvent.obtain(ev);
+                        dispatchTouchEvent(ev);
+                        ev2.setAction(MotionEvent.ACTION_DOWN);
+                        return dispatchTouchEvent(ev2);
+                    }
+                } else if (mInnerScrollView instanceof RecyclerView) {
+                    RecyclerView rv = (RecyclerView) mInnerScrollView;
+                    boolean canScrollDown = ViewCompat.canScrollVertically(rv, -1);
+                    if (!isInControl && !canScrollDown && isTopHidden
+                            && dy > 0) {
+                        isInControl = true;
+                        ev.setAction(MotionEvent.ACTION_CANCEL);
+                        MotionEvent ev2 = MotionEvent.obtain(ev);
+                        dispatchTouchEvent(ev);
+                        ev2.setAction(MotionEvent.ACTION_DOWN);
+                        return dispatchTouchEvent(ev2);
+                    }
+                }
+
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    /**
      * onTouchEvent处理这个layout的滚动,拦截后走这个方法
      *
      * @param event
@@ -95,6 +162,7 @@ public class StickyLayout extends LinearLayout {
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        initVelocityTrackerIfNotExists();
         //加入速度检测
         mVelocityTracker.addMovement(event);
         int action = event.getAction();
@@ -105,9 +173,6 @@ public class StickyLayout extends LinearLayout {
                 if (!mScroller.isFinished()) {
                     mScroller.abortAnimation();
                 }
-                //重置速度检测
-                mVelocityTracker.clear();
-                mVelocityTracker.addMovement(event);
                 mLastY = y;
                 return true;
             case MotionEvent.ACTION_MOVE:
@@ -119,12 +184,19 @@ public class StickyLayout extends LinearLayout {
                 }
                 if (mDragging) {
                     scrollBy(0, (int) -dy);
-                    //更新mLasetY
-                    mLastY = y;
+                    // 如果topView隐藏，且上滑动时，则改变当前事件为ACTION_DOWN
+                    if (getScrollY() == mTopViewHeight && dy < 0) {
+                        event.setAction(MotionEvent.ACTION_DOWN);
+                        dispatchTouchEvent(event);
+                        isInControl = false;
+                    }
+
                 }
+                mLastY = y;
                 break;
             case MotionEvent.ACTION_CANCEL:
                 mDragging = false;
+                recycleVelocityTracker();
                 if (!mScroller.isFinished()) {
                     mScroller.abortAnimation();
                 }
@@ -138,7 +210,7 @@ public class StickyLayout extends LinearLayout {
                     //TODO fling手势
                     fling(-velocityY);
                 }
-                mVelocityTracker.clear();
+                recycleVelocityTracker();
                 break;
         }
         return super.onTouchEvent(event);
@@ -146,6 +218,7 @@ public class StickyLayout extends LinearLayout {
 
     /**
      * 关键代码手指抬起的fling动作实现
+     *
      * @param velocityY
      */
     public void fling(int velocityY) {
@@ -171,16 +244,66 @@ public class StickyLayout extends LinearLayout {
                 getCurrentScrollView();
                 if (Math.abs(dy) > mTouchSlop) {
                     mDragging = true;
-                    //条件1和2
-                    if (!isTopHidden || (mInnerScrollView.getScrollY() == 0 && isTopHidden && dy > 0)) {
-                        return true;
+                    if (mInnerScrollView instanceof ScrollView) {
+                        // 如果topView没有隐藏
+                        // 或sc的scrollY = 0 && topView隐藏 && 下拉，则拦截
+                        if (!isTopHidden
+                                || (mInnerScrollView.getScrollY() == 0
+                                && isTopHidden && dy > 0)) {
+
+                            initVelocityTrackerIfNotExists();
+                            mVelocityTracker.addMovement(ev);
+                            mLastY = y;
+                            return true;
+                        }
+                    } else if (mInnerScrollView instanceof ListView) {
+
+                        ListView lv = (ListView) mInnerScrollView;
+                        View c = lv.getChildAt(lv.getFirstVisiblePosition());
+                        // 如果topView没有隐藏
+                        // 或sc的listView在顶部 && topView隐藏 && 下拉，则拦截
+
+                        if (!isTopHidden || //
+                                (c != null //
+                                        && c.getTop() == 0//
+                                        && isTopHidden && dy > 0)) {
+
+                            initVelocityTrackerIfNotExists();
+                            mVelocityTracker.addMovement(ev);
+                            mLastY = y;
+                            return true;
+                        }
+                    } else if (mInnerScrollView instanceof RecyclerView) {
+                        RecyclerView rv = (RecyclerView) mInnerScrollView;
+                        if (!isTopHidden || (!android.support.v4.view.ViewCompat.canScrollVertically(rv, -1) && isTopHidden && dy > 0)) {
+                            initVelocityTrackerIfNotExists();
+                            mVelocityTracker.addMovement(ev);
+                            mLastY = y;
+                            return true;
+                        }
                     }
+//                    //条件1和2
+//                    if (!isTopHidden || (mInnerScrollView.getScrollY() == 0 && isTopHidden && dy > 0)) {
+//                        return true;
+//                    }
                 }
+                break;
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                mDragging = false;
+                recycleVelocityTracker();
                 break;
         }
 
         return super.onInterceptHoverEvent(ev);
     }
+
+    private void initVelocityTrackerIfNotExists() {
+        if (mVelocityTracker == null) {
+            mVelocityTracker = VelocityTracker.obtain();
+        }
+    }
+
 
     /**
      * 获取当前消费事件的内部子View
