@@ -43,7 +43,7 @@ public class TestFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_test, container, false);
-        mRcv = mRootView.findViewById(R.id.rcv);
+        mRcv = mRootView.findViewById(R.id.id_stickynavlayout_innerscrollview);
         for (int i = 0; i < 100; i++) {
             mData.add(i + "");
         }

@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.kakaxicm.geekming.R;
-import com.kakaxicm.geekming.activity.BaseActivity;
 import com.kakaxicm.geekming.frameworks.rcvadapter.UniversalRcvAdapter;
 import com.kakaxicm.geekming.frameworks.rcvadapter.UniversalRcvViewHolder;
 
@@ -41,7 +40,7 @@ public class FloatHeaderActivity extends BaseActivity {
             mData.add(i + "");
         }
 
-        mRcv = findViewById(R.id.rcv);
+        mRcv = findViewById(R.id.id_stickynavlayout_innerscrollview);
         mRcv.setLayoutManager(new LinearLayoutManager(this, VERTICAL, false));
         mRcv.setAdapter(mAdapter);
     }

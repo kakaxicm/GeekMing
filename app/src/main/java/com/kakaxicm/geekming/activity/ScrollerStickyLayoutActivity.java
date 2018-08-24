@@ -27,23 +27,19 @@ public class ScrollerStickyLayoutActivity extends BaseActivity {
         mIndicator.setTitles(mTitles);
 
 
-        for (int i = 0; i < mTitles.length; i++)
-        {
+        for (int i = 0; i < mTitles.length; i++) {
             mFragments[i] = new TestFragment();
         }
 
         mViewPager = findViewById(R.id.id_stickynavlayout_viewpager);
-        mAdapter = new FragmentPagerAdapter(getSupportFragmentManager())
-        {
+        mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
-            public int getCount()
-            {
+            public int getCount() {
                 return mTitles.length;
             }
 
             @Override
-            public Fragment getItem(int position)
-            {
+            public Fragment getItem(int position) {
                 return mFragments[position];
             }
 
