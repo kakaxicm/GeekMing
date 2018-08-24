@@ -123,6 +123,12 @@ public class StickyLayout extends LinearLayout {
                 }
                 if (mDragging) {
                     scrollBy(0, (int) -dy);
+                    // 如果topView隐藏，且上滑动时，则改变当前事件为ACTION_DOWN
+                    if (getScrollY() == mTopViewHeight && dy < 0) {
+                        event.setAction(MotionEvent.ACTION_DOWN);
+                        dispatchTouchEvent(event);
+                        isInControl = false;
+                    }
                 }
                 mLastY = y;
                 break;
