@@ -1,48 +1,86 @@
 package com.kakaxicm.geekming.behavior.slidingbehavior;
 
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.View;
 
-import com.kakaxicm.geekming.utils.SizeUtils;
+import com.kakaxicm.geekming.R;
 
 /**
  * 作者：余天然 on 16/9/13 下午11:16
  */
 public class SlidingCardBehavior extends CoordinatorLayout.Behavior<SlidingCardView> {
 
-    private int defaultOffset;//默认偏移值
+    private int mDefaultOffset;//默认偏移值
 
     @Override
+    public boolean onLayoutChild(CoordinatorLayout parent, SlidingCardView child, int layoutDirection) {
+        parent.onLayoutChild(child, layoutDirection);
+        int childIndex = getIndexOfChild(parent, child);
+        if (childIndex != -1) {
+            int offset = childIndex * parent.getResources().getDimensionPixelSize(R.dimen.card_header_height);
+            //TODO 问题1 做向下偏移的时候，卡片的高度没有变化，导致整个卡片布局下沉，底部有一部分显示不出来,需要重新矫正高度
+            child.offsetTopAndBottom(offset);
+        }
+
+        mDefaultOffset = child.getTop();
+        return true;
+    }
+
+    /**
+     * 在摆放childview前，测量child，该步骤不是必须，这里是为了解决 TODO 问题1
+     *
+     * @param parent
+     * @param child
+     * @param parentWidthMeasureSpec
+     * @param widthUsed
+     * @param parentHeightMeasureSpec
+     * @param heightUsed
+     * @return
+     */
+    @Override
     public boolean onMeasureChild(CoordinatorLayout parent, SlidingCardView child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
+        //卡片的高度为父布局高度 - (count-1)*标题栏高度
         int offset = getChildMeasureOffset(parent, child);
-        int height = View.MeasureSpec.getSize(parentHeightMeasureSpec) - offset;
+        if (getIndexOfChild(parent, child) < parent.getChildCount() - 1) {
+            offset += parent.getResources().getDimensionPixelSize(R.dimen.card_header_height);
+        }
+        int parentHeight = View.MeasureSpec.getSize(parentHeightMeasureSpec);
+        int height = parentHeight - offset;
         int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY);
         child.measure(parentWidthMeasureSpec, heightMeasureSpec);
         return true;
     }
 
-    @Override
-    public boolean onLayoutChild(CoordinatorLayout parent, SlidingCardView child, int layoutDirection) {
-        parent.onLayoutChild(child, layoutDirection);
-        int childIndex = getIndexofChild(parent, child);
-        if(childIndex != -1){
-            int offset = (int) (childIndex* SizeUtils.dp2Px(parent.getContext().getResources(), 42));
-            child.offsetTopAndBottom(offset);
+    /**
+     * 获取卡片的默认偏移值
+     *
+     * @param parent
+     * @return
+     */
+    private int getChildMeasureOffset(CoordinatorLayout parent, SlidingCardView child) {
+        int perOffset = parent.getResources().getDimensionPixelSize(R.dimen.card_header_height);
+        int cardCount = 0;
+        for (int i = 0; i < parent.getChildCount() - 1; i++) {
+            View view = parent.getChildAt(i);
+            //排除自己
+            if (view != child && view instanceof SlidingCardView) {
+                cardCount++;
+            }
         }
-
-        defaultOffset = child.getTop();
-        return true;
+        return perOffset * cardCount;
     }
 
     /**
      * 获取卡片的index,如果不是则返回-1
+     *
      * @param parent
      * @param child
      * @return
      */
-    private int getIndexofChild(CoordinatorLayout parent, SlidingCardView child) {
+    private int getIndexOfChild(CoordinatorLayout parent, SlidingCardView child) {
         //获取当前子View的index
         if (child instanceof SlidingCardView) {
             int index = parent.indexOfChild(child);
@@ -51,81 +89,89 @@ public class SlidingCardBehavior extends CoordinatorLayout.Behavior<SlidingCardV
         return -1;
     }
 
-    /**
-     * 有嵌套滑动到来了，问下父View是否接受嵌套滑动
-     *
-     * @param coordinatorLayout
-     * @param child             嵌套滑动对应的父类的子类(因为嵌套滑动对于的父View不一定是一级就能找到的，可能挑了两级父View的父View，child的辈分>=target)
-     * @param directTargetChild
-     * @param target            具体嵌套滑动的那个子类
-     * @param nestedScrollAxes  支持嵌套滚动轴。水平方向，垂直方向，或者不指定
-     * @return 是否接受该嵌套滑动
-     */
     @Override
-    public boolean onStartNestedScroll(CoordinatorLayout coordinatorLayout, SlidingCardView child, View directTargetChild, View target, int nestedScrollAxes) {
-        //判断监听的方向
-        boolean isVertical = (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
-        return isVertical && child == directTargetChild;
+    public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull SlidingCardView child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
+        //选中的卡片垂直滚动
+        return (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0 &&
+                child == directTargetChild;//第二个条件是只指定被触摸的卡片滑动,如果只有一个垂直条件，那么所有child都会滑动
     }
 
     /**
-     * 在嵌套滑动的子View未滑动之前告诉过来的准备滑动的情况
-     *
      * @param parent
      * @param child
-     * @param target   具体嵌套滑动的那个子类
-     * @param dx       水平方向嵌套滑动的子View想要变化的距离
-     * @param dy       垂直方向嵌套滑动的子View想要变化的距离
-     * @param consumed 这个参数要我们在实现这个函数的时候指定，回头告诉子View当前父View消耗的距离
-     *                 consumed[0] 水平消耗的距离，consumed[1] 垂直消耗的距离 好让子view做出相应的调整
+     * @param target
+     * @param dx
+     * @param dy
+     * @param consumed 父View告诉子View消耗了多少距离
+     * @param type
      */
     @Override
-    public void onNestedPreScroll(CoordinatorLayout parent, SlidingCardView child, View target, int dx, int dy, int[] consumed) {
-        if (child.getTop() > defaultOffset) {
-            //1、控制自己的滑动
-            int minOffset = defaultOffset;
-            int maxOffset = defaultOffset + child.getHeight() - child.getHeaderHeight();
-            consumed[1] = scroll(child, dy, minOffset, maxOffset);
-            //2、控制上面和下面的滑动
-            shiftScroll(consumed[1], parent, child);
+    public void onNestedPreScroll(@NonNull CoordinatorLayout parent, @NonNull SlidingCardView child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
+        //限定当前child的滚动范围
+        int minOffset = mDefaultOffset;
+        int headHeight = parent.getResources().getDimensionPixelSize(R.dimen.card_header_height);
+        int index = parent.indexOfChild(child);
+        int bottomCardCount = parent.getChildCount() - index;
+        int maxOffset = parent.getMeasuredHeight() - headHeight*bottomCardCount;
+        int initOffset = child.getTop();
+        //1。开启单个child的滑动
+        //dy向上的时候+,向下的时候-
+        //拿到当前滚动的距离
+        int offset = clamp(initOffset - dy, minOffset, maxOffset) - initOffset;
+        child.offsetTopAndBottom(offset);
+        //TODO 问题2：卡片之间的联合滚动
+        consumed[1] = -offset;
+        //2。开启碰撞滑动
+        shiftSlide(consumed[1], parent, child);
+    }
+
+    /**
+     * TODO 问题2 卡片建的碰撞联动
+     *
+     * @param offset
+     * @param parent
+     * @param child
+     */
+    private void shiftSlide(int offset, CoordinatorLayout parent, SlidingCardView child) {
+        int headHeight = parent.getResources().getDimensionPixelSize(R.dimen.card_header_height);
+        if (offset == 0) {
+            return;
+        } else if (offset > 0) {//向上滑
+            SlidingCardView curChild = child;
+            SlidingCardView previousChild = getPreviousChild(parent, child);
+            //循环递推，
+            while (previousChild != null) {
+                //一次循环中，检测当前child和preChild之间的碰撞推动关系
+                //当前child的top
+                int preOffset = getOffsetFromTopToBottom(headHeight, previousChild, curChild);
+                if (preOffset > 0) {
+                    previousChild.offsetTopAndBottom(-preOffset);
+                }
+                curChild = previousChild;
+                previousChild = getPreviousChild(parent, curChild);
+            }
+        } else {//向下滑
+            SlidingCardView curChild = child;
+            SlidingCardView nextChild = getNextChild(parent, child);
+            //循环递推，
+            while (nextChild != null) {
+                //一次循环中，检测当前child和preChild之间的碰撞推动关系
+                //当前child的top
+                int nextOffset = getOffsetFromTopToBottom(headHeight, curChild, nextChild);
+                if (nextOffset > 0) {
+                    nextChild.offsetTopAndBottom(nextOffset);
+                }
+                curChild = nextChild;
+                nextChild = getNextChild(parent, curChild);
+            }
         }
     }
 
-    /**
-     * 嵌套滑动的子View在滑动之后报告过来的滑动情况
-     *
-     * @param parent
-     * @param child
-     * @param target       具体嵌套滑动的那个子类
-     * @param dxConsumed   水平方向嵌套滑动的子View滑动的距离(消耗的距离)
-     * @param dyConsumed   垂直方向嵌套滑动的子View滑动的距离(消耗的距离)
-     * @param dxUnconsumed 水平方向嵌套滑动的子View未滑动的距离(未消耗的距离)
-     * @param dyUnconsumed 垂直方向嵌套滑动的子View未滑动的距离(未消耗的距离)
-     */
-    @Override
-    public void onNestedScroll(CoordinatorLayout parent, SlidingCardView child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-        //1、控制自己的滑动
-        int minOffset = defaultOffset;
-        int maxOffset = defaultOffset + child.getHeight() - child.getHeaderHeight();
-        int scrollY = scroll(child, dyUnconsumed, minOffset, maxOffset);
-        //2、控制上面和下面的滑动
-        shiftScroll(scrollY, parent, child);
-    }
-
-    /**
-     * 处理自己的滑动
-     *
-     * @param child
-     * @param dy
-     * @param minOffset
-     * @param maxOffset
-     * @return
-     */
-    private int scroll(SlidingCardView child, int dy, int minOffset, int maxOffset) {
-        int top = child.getTop();
-        int offset = clamp(top - dy, minOffset, maxOffset) - top;
-        child.offsetTopAndBottom(offset);
-        return -offset;
+    private int getOffsetFromTopToBottom(int headHeight, SlidingCardView topChild, SlidingCardView bottomChild) {
+        int botomChildTop = bottomChild.getTop();
+        int topChildHeaderBottom = topChild.getTop() + headHeight;
+        int offset = topChildHeaderBottom - botomChildTop;
+        return offset;
     }
 
     /**
@@ -136,12 +182,13 @@ public class SlidingCardBehavior extends CoordinatorLayout.Behavior<SlidingCardV
      * @param child
      */
     private void shiftScroll(int scrollY, CoordinatorLayout parent, SlidingCardView child) {
+        int headHeight = parent.getResources().getDimensionPixelSize(R.dimen.card_header_height);
         if (scrollY == 0) return;
         if (scrollY > 0) {//往上推
             SlidingCardView current = child;
             SlidingCardView card = getPreviousChild(parent, current);
             while (card != null) {
-                int delta = calcOtherOffset(card, current);
+                int delta = calcOtherOffset(card, current, headHeight);
                 if (delta > 0) {
                     card.offsetTopAndBottom(-delta);
                 }
@@ -152,7 +199,7 @@ public class SlidingCardBehavior extends CoordinatorLayout.Behavior<SlidingCardV
             SlidingCardView current = child;
             SlidingCardView card = getNextChild(parent, current);
             while (card != null) {
-                int delta = calcOtherOffset(current, card);
+                int delta = calcOtherOffset(current, card, headHeight);
                 if (delta > 0) {
                     card.offsetTopAndBottom(delta);
                 }
@@ -163,36 +210,15 @@ public class SlidingCardBehavior extends CoordinatorLayout.Behavior<SlidingCardV
         }
     }
 
-
     /**
-     * 获取卡片的默认偏移值
-     *
-     * @param parent
-     * @param child
-     * @return
-     */
-    private int getChildMeasureOffset(CoordinatorLayout parent, SlidingCardView child) {
-        int offset = 0;
-        for (int i = 0; i < parent.getChildCount(); i++) {
-            View view = parent.getChildAt(i);
-            //排除自己
-            if (view != child && view instanceof SlidingCardView) {
-                SlidingCardView slidingCardView = (SlidingCardView) view;
-                offset += slidingCardView.getHeaderHeight();
-            }
-        }
-        return offset;
-    }
-
-    /**
-     * 计算其它卡片的偏移值
+     * 计算卡片之间的偏移值
      *
      * @param above
      * @param below
      * @return
      */
-    private int calcOtherOffset(SlidingCardView above, SlidingCardView below) {
-        return above.getTop() + above.getHeaderHeight() - below.getTop();
+    private int calcOtherOffset(SlidingCardView above, SlidingCardView below, int headHeight) {
+        return above.getTop() + headHeight - below.getTop();
     }
 
     /**
