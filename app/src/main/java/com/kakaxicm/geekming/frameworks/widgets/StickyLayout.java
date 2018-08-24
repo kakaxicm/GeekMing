@@ -136,7 +136,7 @@ public class StickyLayout extends LinearLayout {
                 int velocityY = (int) mVelocityTracker.getYVelocity();
                 if (Math.abs(velocityY) > mMinimumVelocity) {
                     //TODO fling手势
-//                    fling(-velocityY);
+                    fling(-velocityY);
                 }
                 mVelocityTracker.clear();
                 break;
@@ -144,7 +144,14 @@ public class StickyLayout extends LinearLayout {
         return super.onTouchEvent(event);
     }
 
-
+    /**
+     * 关键代码手指抬起的fling动作实现
+     * @param velocityY
+     */
+    public void fling(int velocityY) {
+        mScroller.fling(0, getScrollY(), 0, velocityY, 0, 0, 0, mTopViewHeight);
+        invalidate();
+    }
 
 
     @Override
@@ -164,6 +171,7 @@ public class StickyLayout extends LinearLayout {
                 getCurrentScrollView();
                 if (Math.abs(dy) > mTouchSlop) {
                     mDragging = true;
+                    //条件1和2
                     if (!isTopHidden || (mInnerScrollView.getScrollY() == 0 && isTopHidden && dy > 0)) {
                         return true;
                     }
