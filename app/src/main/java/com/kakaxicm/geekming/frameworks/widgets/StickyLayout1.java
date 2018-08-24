@@ -97,22 +97,22 @@ public class StickyLayout1 extends LinearLayout {
             case MotionEvent.ACTION_MOVE:
                 float dy = y - mLastY;
                 getCurrentScrollView();
-                //子滑动View无法继续向下滑动
+
                 if (mInnerScrollView instanceof ScrollView) {
-                    if (mInnerScrollView.getScrollY() == 0 && isTopHidden && dy > 0 && !isInControl) {
-                        isInControl = true;//只执行一次的标记
+                    if (mInnerScrollView.getScrollY() == 0 && isTopHidden && dy > 0
+                            && !isInControl) {
+                        isInControl = true;
                         ev.setAction(MotionEvent.ACTION_CANCEL);
                         MotionEvent ev2 = MotionEvent.obtain(ev);
-                        //发送取消事件重置触摸状态
                         dispatchTouchEvent(ev);
-                        //在发射Down事件
                         ev2.setAction(MotionEvent.ACTION_DOWN);
-                        //继续调用本方法，重新事件分发,此时isInControl=true，不会再进到这段代码
                         return dispatchTouchEvent(ev2);
                     }
                 } else if (mInnerScrollView instanceof ListView) {
+
                     ListView lv = (ListView) mInnerScrollView;
                     View c = lv.getChildAt(lv.getFirstVisiblePosition());
+
                     if (!isInControl && c != null && c.getTop() == 0 && isTopHidden
                             && dy > 0) {
                         isInControl = true;
@@ -122,20 +122,20 @@ public class StickyLayout1 extends LinearLayout {
                         ev2.setAction(MotionEvent.ACTION_DOWN);
                         return dispatchTouchEvent(ev2);
                     }
-                } else if (mInnerScrollView instanceof RecyclerView) {
-                    RecyclerView rv = (RecyclerView) mInnerScrollView;
-                    boolean canScrollDown = ViewCompat.canScrollVertically(rv, -1);
-                    if (!isInControl && canScrollDown && isTopHidden
-                            && dy > 0) {
-                        isInControl = true;
-                        ev.setAction(MotionEvent.ACTION_CANCEL);
-                        MotionEvent ev2 = MotionEvent.obtain(ev);
-                        dispatchTouchEvent(ev);
-                        ev2.setAction(MotionEvent.ACTION_DOWN);
-                        return dispatchTouchEvent(ev2);
-                    }
-                }
+                }else if (mInnerScrollView instanceof RecyclerView) {
 
+                    RecyclerView rv = (RecyclerView) mInnerScrollView;
+
+//                    if (!isInControl && android.support.v4.view.ViewCompat.canScrollVertically(rv, -1) && isTopHidden
+//                            && dy > 0) {
+//                        isInControl = true;
+//                        ev.setAction(MotionEvent.ACTION_CANCEL);
+//                        MotionEvent ev2 = MotionEvent.obtain(ev);
+//                        dispatchTouchEvent(ev);
+//                        ev2.setAction(MotionEvent.ACTION_DOWN);
+//                        return dispatchTouchEvent(ev2);
+//                    }
+                }
                 break;
         }
         return super.dispatchTouchEvent(ev);
@@ -323,5 +323,6 @@ public class StickyLayout1 extends LinearLayout {
             mVelocityTracker = null;
         }
     }
+
 
 }
