@@ -16,8 +16,8 @@ public class ScrollerStickyLayoutActivity extends BaseActivity {
     private SimpleViewPagerIndicator mIndicator;
     private String[] mTitles = new String[]{"苹果", "香蕉", "橘子"};
     private TestFragment[] mFragments = new TestFragment[mTitles.length];
-//    private ViewPager mViewPager;
-//    private FragmentPagerAdapter mAdapter;
+    private ViewPager mViewPager;
+    private FragmentPagerAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,24 +25,47 @@ public class ScrollerStickyLayoutActivity extends BaseActivity {
         setContentView(R.layout.activity_scroller_stickylayout);
         mIndicator = findViewById(R.id.id_stickynavlayout_indicator);
         mIndicator.setTitles(mTitles);
-//        mViewPager = findViewById(R.id.id_stickynavlayout_viewpager);
-//        mAdapter = new FragmentPagerAdapter(getSupportFragmentManager())
-//        {
-//            @Override
-//            public int getCount()
-//            {
-//                return mTitles.length;
-//            }
-//
-//            @Override
-//            public Fragment getItem(int position)
-//            {
-//                return mFragments[position];
-//            }
-//
-//        };
-//
-//        mViewPager.setAdapter(mAdapter);
-//        mViewPager.setCurrentItem(0);
+
+
+        for (int i = 0; i < mTitles.length; i++)
+        {
+            mFragments[i] = new TestFragment();
+        }
+
+        mViewPager = findViewById(R.id.id_stickynavlayout_viewpager);
+        mAdapter = new FragmentPagerAdapter(getSupportFragmentManager())
+        {
+            @Override
+            public int getCount()
+            {
+                return mTitles.length;
+            }
+
+            @Override
+            public Fragment getItem(int position)
+            {
+                return mFragments[position];
+            }
+
+        };
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                mIndicator.scroll(position, positionOffset);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        mViewPager.setAdapter(mAdapter);
+        mViewPager.setCurrentItem(0);
     }
 }
