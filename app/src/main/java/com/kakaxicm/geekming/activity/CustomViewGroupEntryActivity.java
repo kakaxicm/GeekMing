@@ -31,6 +31,8 @@ public class CustomViewGroupEntryActivity extends BaseActivity {
     private View mCardLayoutEntry;
     @ViewIdAnnotation(value = R.id.scroller_sticky_card_entry)
     private View mScrollerStickyLayoutEntry;
+    @ViewIdAnnotation(value = R.id.scroller_multi_scroll_entry)
+    private View mMultiScrollEntry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class CustomViewGroupEntryActivity extends BaseActivity {
         mStickyHeadViewPagerEntry.setOnClickListener(this);
         mCardLayoutEntry.setOnClickListener(this);
         mScrollerStickyLayoutEntry.setOnClickListener(this);
+        mMultiScrollEntry.setOnClickListener(this);
     }
 
     @Override
@@ -86,6 +89,9 @@ public class CustomViewGroupEntryActivity extends BaseActivity {
                 intent.setClass(mContext, ScrollerStickyLayoutActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.scroller_multi_scroll_entry:
+                intent.setClass(mContext, MultiScrollPageActivity.class);
+                startActivity(intent);
             default:
                 break;
         }

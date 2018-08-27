@@ -57,4 +57,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Scroller实现StickyLayout" />
+
+    <Button
+        android:id="@+id/scroller_multi_scroll_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="多重嵌套滚动页面综合" />
 </LinearLayout>
