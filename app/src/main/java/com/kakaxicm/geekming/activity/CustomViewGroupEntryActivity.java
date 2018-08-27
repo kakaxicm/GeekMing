@@ -13,7 +13,7 @@ import com.kakaxicm.geekming.frameworks.ioc.annotions.ViewIdAnnotation;
  */
 @ContentViewAnnotation(value = R.layout.activity_viewgtoup_entry)
 public class CustomViewGroupEntryActivity extends BaseActivity {
-    @ViewIdAnnotation(value = R.id.vertical_sliding_title_entry)
+    @ViewIdAnnotation(R.id.vertical_sliding_title_entry)
     private View mVerticalSlidingTitleEntry;
     @ViewIdAnnotation(value = R.id.flow_layout_entry)
     private View mFlowLayoutEntry;
