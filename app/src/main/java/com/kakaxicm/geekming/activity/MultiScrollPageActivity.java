@@ -1,6 +1,8 @@
 package com.kakaxicm.geekming.activity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
@@ -8,11 +10,16 @@ import android.support.v7.widget.ButtonBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 
 import com.kakaxicm.geekming.R;
+import com.kakaxicm.geekming.fragment.ComFragmentAdapter;
+import com.kakaxicm.geekming.fragment.TestFragment;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ViewIdAnnotation;
+import com.kakaxicm.geekming.frameworks.widgets.ColorFlipPagerTitleView;
 import com.kakaxicm.geekming.frameworks.widgets.JudgeNestedScrollView;
 import com.kakaxicm.geekming.utils.ScreenUtil;
 import com.kakaxicm.geekming.utils.StatusBarUtil;
@@ -26,6 +33,18 @@ import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
 import com.scwang.smartrefresh.layout.util.DensityUtil;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
+import net.lucode.hackware.magicindicator.ViewPagerHelper;
+import net.lucode.hackware.magicindicator.buildins.UIUtil;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.SimplePagerTitleView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by chenming on 2018/8/27
@@ -45,11 +64,14 @@ public class MultiScrollPageActivity extends BaseActivity {
     private int toolBarPositionY;
     private ViewPager viewPager;
     private MagicIndicator magicIndicator;
-    private View magicIndicatorTitle;
+    private MagicIndicator magicIndicatorTitle;
 
     private ImageView ivBack;
     private ImageView ivMenu;
     private ButtonBarLayout buttonBarLayout;
+
+    private String[] mTitles = new String[]{"动态", "文章", "问答"};
+    private List<String> mDataList = Arrays.asList(mTitles);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +154,66 @@ public class MultiScrollPageActivity extends BaseActivity {
                 }
             }
         });
+
+        buttonBarLayout.setAlpha(0);
+        toolbar.setBackgroundColor(0);
+
+
+        viewPager.setAdapter(new ComFragmentAdapter(getSupportFragmentManager(), getFragments()));
+        viewPager.setOffscreenPageLimit(10);
+        initMagicIndicator();
+        initMagicIndicatorTitle();
+    }
+
+    private void initMagicIndicator() {
+        CommonNavigator commonNavigator = new CommonNavigator(this);
+        commonNavigator.setScrollPivotX(0.65f);
+        commonNavigator.setAdjustMode(true);
+        commonNavigator.setAdapter(new CommonNavigatorAdapter() {
+            @Override
+            public int getCount() {
+                return mDataList == null ? 0 : mDataList.size();
+            }
+
+            @Override
+            public IPagerTitleView getTitleView(Context context, final int index) {
+                SimplePagerTitleView simplePagerTitleView = new ColorFlipPagerTitleView(context);
+                simplePagerTitleView.setText(mDataList.get(index));
+                simplePagerTitleView.setNormalColor(ContextCompat.getColor(MultiScrollPageActivity.this, R.color.mainBlack));
+                simplePagerTitleView.setSelectedColor(ContextCompat.getColor(MultiScrollPageActivity.this, R.color.mainBlack));
+                simplePagerTitleView.setTextSize(16);
+                simplePagerTitleView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewPager.setCurrentItem(index, false);
+                    }
+                });
+                return simplePagerTitleView;
+            }
+
+            @Override
+            public IPagerIndicator getIndicator(Context context) {
+                LinePagerIndicator indicator = new LinePagerIndicator(context);
+                indicator.setMode(LinePagerIndicator.MODE_EXACTLY);
+                indicator.setLineHeight(UIUtil.dip2px(context, 2));
+                indicator.setLineWidth(UIUtil.dip2px(context, 20));
+                indicator.setRoundRadius(UIUtil.dip2px(context, 3));
+                indicator.setStartInterpolator(new AccelerateInterpolator());
+                indicator.setEndInterpolator(new DecelerateInterpolator(2.0f));
+                indicator.setColors(ContextCompat.getColor(MultiScrollPageActivity.this, R.color.mainRed));
+                return indicator;
+            }
+        });
+        magicIndicator.setNavigator(commonNavigator);
+        ViewPagerHelper.bind(magicIndicator, viewPager);
+    }
+
+    private List<Fragment> getFragments() {
+        List<Fragment> fragments = new ArrayList<>();
+        fragments.add(new TestFragment());
+        fragments.add(new TestFragment());
+        fragments.add(new TestFragment());
+        return fragments;
     }
 
     /**
@@ -142,6 +224,50 @@ public class MultiScrollPageActivity extends BaseActivity {
         ViewGroup.LayoutParams params = viewPager.getLayoutParams();
         params.height = ScreenUtil.getScreenHeightPx(getApplicationContext()) - toolBarPositionY - magicIndicator.getHeight() + 1;
         viewPager.setLayoutParams(params);
+    }
+
+    private void initMagicIndicatorTitle() {
+        CommonNavigator commonNavigator = new CommonNavigator(this);
+        commonNavigator.setScrollPivotX(0.65f);
+        commonNavigator.setAdjustMode(true);
+        commonNavigator.setAdapter(new CommonNavigatorAdapter() {
+            @Override
+            public int getCount() {
+                return mDataList == null ? 0 : mDataList.size();
+            }
+
+            @Override
+            public IPagerTitleView getTitleView(Context context, final int index) {
+                SimplePagerTitleView simplePagerTitleView = new ColorFlipPagerTitleView(context);
+                simplePagerTitleView.setText(mDataList.get(index));
+                simplePagerTitleView.setNormalColor(ContextCompat.getColor(MultiScrollPageActivity.this, R.color.mainBlack));
+                simplePagerTitleView.setSelectedColor(ContextCompat.getColor(MultiScrollPageActivity.this, R.color.mainBlack));
+                simplePagerTitleView.setTextSize(16);
+                simplePagerTitleView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewPager.setCurrentItem(index, false);
+                    }
+                });
+                return simplePagerTitleView;
+            }
+
+            @Override
+            public IPagerIndicator getIndicator(Context context) {
+                LinePagerIndicator indicator = new LinePagerIndicator(context);
+                indicator.setMode(LinePagerIndicator.MODE_EXACTLY);
+                indicator.setLineHeight(UIUtil.dip2px(context, 2));
+                indicator.setLineWidth(UIUtil.dip2px(context, 20));
+                indicator.setRoundRadius(UIUtil.dip2px(context, 3));
+                indicator.setStartInterpolator(new AccelerateInterpolator());
+                indicator.setEndInterpolator(new DecelerateInterpolator(2.0f));
+                indicator.setColors(ContextCompat.getColor(MultiScrollPageActivity.this, R.color.mainRed));
+                return indicator;
+            }
+        });
+        magicIndicatorTitle.setNavigator(commonNavigator);
+        ViewPagerHelper.bind(magicIndicatorTitle, viewPager);
+
     }
 
 }
