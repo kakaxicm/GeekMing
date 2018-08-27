@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <!--StickyLayout-->
-<com.kakaxicm.geekming.frameworks.widgets.StickyLayoutNestedScroll xmlns:android="http://schemas.android.com/apk/res/android"
+<!--StickyLayout--><!--StickyLayoutNestedScroll-->
+<com.kakaxicm.geekming.frameworks.widgets.StickyLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -30,6 +30,6 @@
         android:id="@id/id_stickynavlayout_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff"/>
+        android:background="#ffffff" />
 
-</com.kakaxicm.geekming.frameworks.widgets.StickyLayoutNestedScroll>
+</com.kakaxicm.geekming.frameworks.widgets.StickyLayout>
