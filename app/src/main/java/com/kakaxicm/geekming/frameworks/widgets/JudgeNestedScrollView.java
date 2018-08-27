@@ -11,7 +11,7 @@ import android.widget.ScrollView;
 /**
  * 处理滑动冲突的顶层容器
  */
-public class JudgeNestedScrollView extends ScrollView {
+public class JudgeNestedScrollView extends NestedScrollView {
     private boolean isNeedScroll = true;
     private float xDistance, yDistance, xLast, yLast;
     private int scaledTouchSlop;
