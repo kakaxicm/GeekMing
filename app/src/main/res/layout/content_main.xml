@@ -23,4 +23,9 @@
         android:layout_height="wrap_content"
         android:text="Custom ViewGroup Entry" />
 
+    <Button
+        android:id="@+id/ruler_view_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自定义View-尺子"/>
 </LinearLayout>

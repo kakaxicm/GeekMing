@@ -44,4 +44,14 @@ public class SizeUtils {
         return displayMetrics.heightPixels;
     }
 
+    public static float dp2px(float dpValue, Context context) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                dpValue, context.getResources().getDisplayMetrics());
+    }
+
+    public static float sp2px(float spValue, Context context) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                spValue, context.getResources().getDisplayMetrics());
+    }
+
 }

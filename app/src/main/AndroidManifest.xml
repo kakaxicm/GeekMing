@@ -50,6 +50,9 @@
         <activity
             android:name=".activity.MultiScrollPageActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.kakaxicm.geekming.activity.RulerActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

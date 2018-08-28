@@ -6,6 +6,7 @@ import android.view.View;
 import com.kakaxicm.geekming.R;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ContentViewAnnotation;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ViewIdAnnotation;
+import com.kakaxicm.geekming.frameworks.widgets.RulerView;
 
 @ContentViewAnnotation(value = R.layout.content_main)
 public class MainActivity extends BaseActivity implements View.OnClickListener{
@@ -24,6 +25,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         mCommenAdapterEntryView.setOnClickListener(this);
         mDownloadManagerEntry.setOnClickListener(this);
         mCustomViewGroupEntry.setOnClickListener(this);
+        findViewById(R.id.ruler_view_entry).setOnClickListener(this);
     }
 
     @Override
@@ -40,6 +42,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 break;
             case R.id.custom_viewgroup_entry:
                 intent = new Intent(this, CustomViewGroupEntryActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.ruler_view_entry:
+                intent = new Intent(this, RulerActivity.class);
                 startActivity(intent);
                 break;
             default:
