@@ -29,8 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         app:calibrationWidth="1dp"
-        app:maxValue="200"
-        app:minValue="40"
+        app:maxValue="100"
+        app:minValue="60"
         app:per="0.1"
         app:value="90" />
 </LinearLayout>

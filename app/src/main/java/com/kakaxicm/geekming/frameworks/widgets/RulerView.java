@@ -303,6 +303,10 @@ public class RulerView extends View {
                 mLastX = x;
                 break;
             case MotionEvent.ACTION_UP:
+                //松手的时候，一定不要忘记复位触摸事件的参量，以便scroller做准确计算
+                mLastX = 0;
+                mDelta = 0;
+                //滚动参量清零后，检测是否为飞速滑动，如果是则scroller执行filing方法,否则做对齐动画操作
                 handlerSmoothAction();
                 return false;
             default:
@@ -337,8 +341,6 @@ public class RulerView extends View {
 
     @Override
     public void computeScroll() {
-        super.computeScroll();
-
         //返回true表示滑动还没有结束
         if (scroller.computeScrollOffset()) {
             //fling手势滚动结束
