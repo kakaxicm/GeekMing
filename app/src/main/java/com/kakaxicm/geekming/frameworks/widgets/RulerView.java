@@ -341,11 +341,14 @@ public class RulerView extends View {
 
         //返回true表示滑动还没有结束
         if (scroller.computeScrollOffset()) {
+            //fling手势滚动结束
             if (scroller.getCurrX() == scroller.getFinalX()) {
                 //滑动到最近的刻度位置
                 recycleVelocityTracker();
+                //平滑实现刻度对齐
                 smoothMoveToFinalCalibration();
             } else {
+                //飞速滚动过程中实现更新offset
                 int x = scroller.getCurrX();
                 mDelta = mLastX - x;
                 updateValueAndOffset();
