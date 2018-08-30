@@ -1,7 +1,10 @@
 package com.kakaxicm.geekming.barrage;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -11,7 +14,11 @@ import android.view.ViewGroup;
 import com.kakaxicm.geekming.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 
 /**
  * Created by chenming on 2018/8/30
@@ -41,27 +48,50 @@ public class BarrageView extends ViewGroup {
 
     private BarrageAdapter mAdapter;
 
-    public List<View> mSpanList;//每一行新加进来的view,用于计算最大剩余空间的行
+    private List<View> mSpanList;//每一行新加进来的view,用于计算最大剩余空间的行
+    //每一行等待发射的View
+    private HashMap<Integer, LinkedList<View>> mWaitingViewsForLine;
 
     private OnItemClickListener onItemClickListener;
 
     private Boolean mIsQuit = false;
-
-    Handler handler = new Handler() {
+    //UI操作层 - 执行移动子View的handle
+    @SuppressLint("HandlerLeak")
+    Handler mMainMoveHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
                 for (int i = 0; i < BarrageView.this.getChildCount(); i++) {
                     View view = BarrageView.this.getChildAt(i);
-                    if (view.getX() + view.getWidth() >= 0)
-                        // 向左滑动
-                        view.offsetLeftAndRight(0 - mSpeed);
-                    else {
+                    //view没有完全离开左边屏幕
+                    if (view.getX() + view.getWidth() >= 0) {
+
+                        if (!isInWaitingQueue(view)) {//如果View没有在等待队列,则滑动它
+                            float x = view.getX();
+                            int width = view.getWidth();
+                            Log.e("ScrollParams", "x = " + x + ", width = " + width + ", right = " + getRight());
+                            // 向左滑动
+                            view.offsetLeftAndRight(0 - mSpeed);
+                        } else {//如果在等待队列,则更新每行最新的发射View
+
+                            Log.e("WaitingTest", "view在等待队列");
+                            InnerEntity innerEntity = (InnerEntity) view.getTag(R.id.tag_inner_entity);
+                            int line = innerEntity.bestLine;
+                            //取当前行最后发射的View,判断它是否滑出右边界
+                            View currentLastView = mSpanList.get(line);
+                            if(isViewLeaveRightBound(currentLastView)){//滑出右边界
+                                mSpanList.set(line, view);
+                                //从等待队列中移除
+                                mWaitingViewsForLine.get(line).remove(view);
+                            }
+                        }
+
+                    } else {
                         //滑出屏幕的View添加到缓存中
                         int type = ((InnerEntity) view.getTag(R.id.tag_inner_entity)).model.getType();
                         mAdapter.addViewToCache(type, view);
-                        Log.e("ViewCacheSize", "回收View后:"+mAdapter.getCacheSize() + "");
+                        Log.e("ViewCacheSize", "回收View后:" + mAdapter.getCacheSize() + "");
                         BarrageView.this.removeView(view);
 
                     }
@@ -69,7 +99,37 @@ public class BarrageView extends ViewGroup {
             }
 
         }
+
+
     };
+
+    /**
+     * view是否等待发射
+     *
+     * @param view
+     * @return
+     */
+    private boolean isInWaitingQueue(View view) {
+        Set<Integer> keySet = mWaitingViewsForLine.keySet();
+        for (Integer index : keySet) {
+            Queue<View> queue = mWaitingViewsForLine.get(index);
+            if (queue != null && queue.contains(view)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private class BackLoopHandler extends Handler {
+        BackLoopHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+
+        }
+    }
 
     public BarrageView(Context context) {
         this(context, null);
@@ -90,12 +150,17 @@ public class BarrageView extends ViewGroup {
 
         WIDTH = MeasureSpec.getSize(widthMeasureSpec);
         HEIGHT = MeasureSpec.getSize(heightMeasureSpec);
-
+        //行数
         mSpanCount = HEIGHT / mSingleLineHeight;
-        // 创建同样大小的view集合
-        for (int i = 0; i < mSpanCount; i++) {
-            if (mSpanList.size() < mSpanCount) {
-                mSpanList.add(i, null);
+        if(mWaitingViewsForLine == null){
+            mWaitingViewsForLine = new HashMap<>();
+            // 创建同样大小的view集合
+            for (int i = 0; i < mSpanCount; i++) {
+                if (mSpanList.size() < mSpanCount) {
+                    mSpanList.add(i, null);
+                }
+                //初始化每一行的待发射View集合
+                mWaitingViewsForLine.put(i, new LinkedList<View>());
             }
         }
     }
@@ -197,7 +262,42 @@ public class BarrageView extends ViewGroup {
         innerEntity.model = model;
         innerEntity.bestLine = bestLine;
         child.setTag(R.id.tag_inner_entity, innerEntity);
-        mSpanList.set(bestLine, child);
+        if (mSpanList.get(bestLine) == null) {//当前行为空行
+            mSpanList.set(bestLine, child);
+            return;
+        }
+        //当前行不为空行
+        //获取当前这一行最后已经发射的View
+        View currentLastestView = mSpanList.get(bestLine);
+        if (isViewLeaveRightBound(currentLastestView)) {
+            //如果已经离开右边界,则更新mSpanList
+            mSpanList.set(bestLine, child);
+        } else {
+            //如果还没有离开右边界,则将新Child加入等待集合,等待当前行最后发射的View离开右边屏幕
+            Queue<View> views = mWaitingViewsForLine.get(bestLine);
+            views.add(child);
+        }
+    }
+
+
+    /**
+     * 判断child vieew是否离开左边的屏幕
+     *
+     * @param view
+     * @return
+     */
+    private boolean isViewLeaveLeftBound(View view) {
+        return view.getX() + view.getWidth() <= 0;
+    }
+
+    /**
+     * 判断child vieew是否离开右边的屏幕
+     *
+     * @param view
+     * @return
+     */
+    private boolean isViewLeaveRightBound(View view) {
+        return view.getX() + view.getWidth() <= getWidth();
     }
 
     /**
@@ -216,7 +316,7 @@ public class BarrageView extends ViewGroup {
             int type = model.getType();
             View cacheView = mAdapter.removeViewFromCache(type);
             if (cacheView != null) {
-                Log.e("ViewCacheSize", "复用View后:"+mAdapter.getCacheSize() + "");
+                Log.e("ViewCacheSize", "复用View后:" + mAdapter.getCacheSize() + "");
                 dmView = cacheView;
                 addTypeView(model, dmView, true);
             } else {
@@ -229,6 +329,8 @@ public class BarrageView extends ViewGroup {
             addTypeView(model, dmView, false);
         }
 
+//        dmView = mAdapter.getView(model, null);
+//        addTypeView(model, dmView, false);
 
         //添加监听
         dmView.setOnClickListener(new OnClickListener() {
@@ -256,13 +358,12 @@ public class BarrageView extends ViewGroup {
                     //收缩缓存
                     if (BarrageView.this.getChildCount() < mAdapter.getCacheSize() / 2) {
                         mAdapter.shrinkCacheSize();
-                        Log.e("ViewCacheSize", "shrinkCacheSize后的大小:" + mAdapter.getCacheSize());
                     }
                 }
                 if (BarrageView.this.getChildCount() >= 0) {
                     msg = new Message();
                     msg.what = 1; //移动view
-                    handler.sendMessage(msg);
+                    mMainMoveHandler.sendMessage(msg);
                 }
 
                 try {
@@ -275,15 +376,19 @@ public class BarrageView extends ViewGroup {
         }
     }
 
+    /**
+     * View被销毁的时候，终止轮询线程，清理集合
+     */
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         Log.e("ViewCacheSize", "onDetachedFromWindow");
         mIsQuit = true;
         mAdapter.clearCache();
-        if(mSpanList != null && mSpanList.size() > 0){
+        if (mSpanList != null && mSpanList.size() > 0) {
             mSpanList.clear();
         }
+        mWaitingViewsForLine.clear();;
     }
 
     class InnerEntity {
