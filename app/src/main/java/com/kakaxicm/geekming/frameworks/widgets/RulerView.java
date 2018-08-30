@@ -72,7 +72,7 @@ public class RulerView extends View {
     //被认为是快速滑动的最小速度
     private float mMinFlingVelocity;
     //处理fling手势帮助类
-    private Scroller scroller;
+    private Scroller mScroller;
     //滑动过程的偏移
     private float mDelta;
     //画笔
@@ -122,7 +122,7 @@ public class RulerView extends View {
      */
     private void init(Context context) {
         mMinFlingVelocity = ViewConfiguration.get(getContext()).getScaledMinimumFlingVelocity();
-        scroller = new Scroller(context);
+        mScroller = new Scroller(context);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setTextSize(mTextSize);
 
@@ -290,7 +290,7 @@ public class RulerView extends View {
         float x = event.getX();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                scroller.forceFinished(true);
+                mScroller.forceFinished(true);
                 mLastX = x;
                 mDelta = 0;
                 break;
@@ -330,7 +330,7 @@ public class RulerView extends View {
         mVelocityTracker.computeCurrentVelocity(1000);
         float xVelocity = mVelocityTracker.getXVelocity(); //计算水平方向的速度（单位秒）
         if (Math.abs(xVelocity) > mMinFlingVelocity) {
-            scroller.fling(0, 0, (int) xVelocity, 0, Integer.MIN_VALUE, Integer.MAX_VALUE, 0, 0);
+            mScroller.fling(0, 0, (int) xVelocity, 0, Integer.MIN_VALUE, Integer.MAX_VALUE, 0, 0);
             invalidate();
         } else {
             //滑动到最近的刻度位置
@@ -342,16 +342,16 @@ public class RulerView extends View {
     @Override
     public void computeScroll() {
         //返回true表示滑动还没有结束
-        if (scroller.computeScrollOffset()) {
+        if (mScroller.computeScrollOffset()) {
             //fling手势滚动结束
-            if (scroller.getCurrX() == scroller.getFinalX()) {
+            if (mScroller.getCurrX() == mScroller.getFinalX()) {
                 //滑动到最近的刻度位置
                 recycleVelocityTracker();
                 //平滑实现刻度对齐
                 smoothMoveToFinalCalibration();
             } else {
                 //飞速滚动过程中实现更新offset
-                int x = scroller.getCurrX();
+                int x = mScroller.getCurrX();
                 mDelta = mLastX - x;
                 updateValueAndOffset();
                 mLastX = x;
@@ -394,14 +394,14 @@ public class RulerView extends View {
         //更新offset
         mOffsetFromValue += mDelta;
         if (mOffsetFromValue < 0) {
-            scroller.forceFinished(true);
+            mScroller.forceFinished(true);
             mOffsetFromValue = 0;
             mDelta = 0;
 
         } else if (mOffsetFromValue > mMaxOffset) {
             mOffsetFromValue = mMaxOffset;
             mDelta = 0;
-            scroller.forceFinished(true);
+            mScroller.forceFinished(true);
         }
 //        offset更新，value发生变化
 //        公式:mOffsetFromValue = (value - minValue) * 10 / mPer * mGapWidth;

@@ -63,4 +63,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="多重嵌套滚动页面综合" />
+
+    <Button
+        android:id="@+id/barrage_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="弹幕效果" />
 </LinearLayout>

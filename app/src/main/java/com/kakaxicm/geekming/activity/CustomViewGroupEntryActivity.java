@@ -11,28 +11,30 @@ import com.kakaxicm.geekming.frameworks.ioc.annotions.ViewIdAnnotation;
 /**
  * Created by star on 15/12/30.
  */
-@ContentViewAnnotation(value = R.layout.activity_viewgtoup_entry)
+@ContentViewAnnotation(R.layout.activity_viewgtoup_entry)
 public class CustomViewGroupEntryActivity extends BaseActivity {
     @ViewIdAnnotation(R.id.vertical_sliding_title_entry)
     private View mVerticalSlidingTitleEntry;
-    @ViewIdAnnotation(value = R.id.flow_layout_entry)
+    @ViewIdAnnotation(R.id.flow_layout_entry)
     private View mFlowLayoutEntry;
-    @ViewIdAnnotation(value = R.id.bubble_imageview_entry)
+    @ViewIdAnnotation(R.id.bubble_imageview_entry)
     private View mShapeBitmapViewEntry;
-    @ViewIdAnnotation(value = R.id.behavior_entry1)
+    @ViewIdAnnotation(R.id.behavior_entry1)
     private View mBehaviorEntry1;
-    @ViewIdAnnotation(value = R.id.behavior_entry2)
+    @ViewIdAnnotation(R.id.behavior_entry2)
     private View mBehaviorEntry2;
-    @ViewIdAnnotation(value = R.id.floating_head_entry)
+    @ViewIdAnnotation(R.id.floating_head_entry)
     private View mFloatingHeadEntry;
-    @ViewIdAnnotation(value = R.id.floating_sticky_viewpager_entry)
+    @ViewIdAnnotation(R.id.floating_sticky_viewpager_entry)
     private View mStickyHeadViewPagerEntry;
-    @ViewIdAnnotation(value = R.id.floating_sticky_card_entry)
+    @ViewIdAnnotation(R.id.floating_sticky_card_entry)
     private View mCardLayoutEntry;
-    @ViewIdAnnotation(value = R.id.scroller_sticky_card_entry)
+    @ViewIdAnnotation(R.id.scroller_sticky_card_entry)
     private View mScrollerStickyLayoutEntry;
-    @ViewIdAnnotation(value = R.id.scroller_multi_scroll_entry)
+    @ViewIdAnnotation(R.id.scroller_multi_scroll_entry)
     private View mMultiScrollEntry;
+    @ViewIdAnnotation(R.id.barrage_entry)
+    private View mBarrageEntry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class CustomViewGroupEntryActivity extends BaseActivity {
         mCardLayoutEntry.setOnClickListener(this);
         mScrollerStickyLayoutEntry.setOnClickListener(this);
         mMultiScrollEntry.setOnClickListener(this);
+        mBarrageEntry.setOnClickListener(this);
     }
 
     @Override
@@ -92,6 +95,11 @@ public class CustomViewGroupEntryActivity extends BaseActivity {
             case R.id.scroller_multi_scroll_entry:
                 intent.setClass(mContext, MultiScrollPageActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.barrage_entry:
+                intent.setClass(mContext, BarrageActivity.class);
+                startActivity(intent);
+                break;
             default:
                 break;
         }
