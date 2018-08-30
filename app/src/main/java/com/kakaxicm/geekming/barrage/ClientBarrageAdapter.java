@@ -1,7 +1,6 @@
 package com.kakaxicm.geekming.barrage;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -13,11 +12,11 @@ import com.kakaxicm.geekming.R;
  */
 public class ClientBarrageAdapter extends BarrageAdapter<ClientBarrageModel> {
 
-    private Context context;
+    private Context mContext;
 
     public ClientBarrageAdapter(Context c) {
         super();
-        context = c;
+        mContext = c;
     }
 
     @Override
@@ -28,7 +27,7 @@ public class ClientBarrageAdapter extends BarrageAdapter<ClientBarrageModel> {
 
     @Override
     public int getSingleLineHeight() {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_danmu, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_danmu, null);
         //指定行高
         view.measure(View.MeasureSpec.UNSPECIFIED, 0);
 
@@ -39,7 +38,7 @@ public class ClientBarrageAdapter extends BarrageAdapter<ClientBarrageModel> {
     public View getView(ClientBarrageModel entry, View convertView) {
         ViewHolder vh = null;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_danmu, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_danmu, null);
             vh = new ViewHolder();
             vh.tv = convertView.findViewById(R.id.tv_danmu);
             convertView.setTag(vh);

@@ -29,21 +29,23 @@ public class BarrageView extends ViewGroup {
     public final static int GRAVITY_BOTTOM = 4;  //100 只出现在屏幕底部
     public final static int GRAVITY_FULL = 7;   //111  可以出现在任何位置
 
-    private int gravity = GRAVITY_FULL;
+    private int mGravity = GRAVITY_FULL;
 
-    private int speed = 4;
+    private int mSpeed = 4;
 
-    private int spanCount = 6;
+    private int mSpanCount = 6;
 
     private int WIDTH, HEIGHT;
 
-    private int singltLineHeight;
+    private int mSingleLineHeight;
 
-    private BarrageAdapter adapter;
+    private BarrageAdapter mAdapter;
 
-    public List<View> spanList;//每一行新加进来的view
+    public List<View> mSpanList;//每一行新加进来的view,用于计算最大剩余空间的行
 
     private OnItemClickListener onItemClickListener;
+
+    private Boolean mIsQuit = false;
 
     Handler handler = new Handler() {
         @Override
@@ -54,12 +56,12 @@ public class BarrageView extends ViewGroup {
                     View view = BarrageView.this.getChildAt(i);
                     if (view.getX() + view.getWidth() >= 0)
                         // 向左滑动
-                        view.offsetLeftAndRight(0 - speed);
+                        view.offsetLeftAndRight(0 - mSpeed);
                     else {
                         //滑出屏幕的View添加到缓存中
                         int type = ((InnerEntity) view.getTag(R.id.tag_inner_entity)).model.getType();
-                        adapter.addViewToCache(type, view);
-                        Log.e("ViewCacheSize", "回收View后:"+adapter.getCacheSize() + "");
+                        mAdapter.addViewToCache(type, view);
+                        Log.e("ViewCacheSize", "回收View后:"+mAdapter.getCacheSize() + "");
                         BarrageView.this.removeView(view);
 
                     }
@@ -79,7 +81,7 @@ public class BarrageView extends ViewGroup {
 
     public BarrageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        spanList = new ArrayList<>();
+        mSpanList = new ArrayList<>();
     }
 
     @Override
@@ -89,11 +91,11 @@ public class BarrageView extends ViewGroup {
         WIDTH = MeasureSpec.getSize(widthMeasureSpec);
         HEIGHT = MeasureSpec.getSize(heightMeasureSpec);
 
-        spanCount = HEIGHT / singltLineHeight;
+        mSpanCount = HEIGHT / mSingleLineHeight;
         // 创建同样大小的view集合
-        for (int i = 0; i < spanCount; i++) {
-            if (spanList.size() < spanCount) {
-                spanList.add(i, null);
+        for (int i = 0; i < mSpanCount; i++) {
+            if (mSpanList.size() < mSpanCount) {
+                mSpanList.add(i, null);
             }
         }
     }
@@ -104,10 +106,10 @@ public class BarrageView extends ViewGroup {
     }
 
     public void setAdapter(BarrageAdapter adapter) {
-        this.adapter = adapter;
-        singltLineHeight = adapter.getSingleLineHeight();
-        //TODO  开线程使弹幕滚动起来
-        new Thread(new MyRunnable()).start();
+        this.mAdapter = adapter;
+        mSingleLineHeight = adapter.getSingleLineHeight();
+        //开线程使弹幕滚动起来
+        new Thread(new LoopRunnable()).start();
     }
 
     /**
@@ -117,14 +119,14 @@ public class BarrageView extends ViewGroup {
      */
     private int getBestLine() {
         // 转换为2进制
-        int gewei = gravity % 2;
-        int temp = gravity / 2;
+        int gewei = mGravity % 2;
+        int temp = mGravity / 2;
         int shiwei = temp % 2;
         temp = temp / 2;
         int baiwei = temp % 2;
 
         // 将所有的行分为三份,前两份行数相同,将第一份的行数四舍五入
-        int firstLine = (int) (spanCount / 3.0 + 0.5);
+        int firstLine = (int) (mSpanCount / 3.0 + 0.5);
         //根据gravity，计算支持的行索引集合
         List<Integer> legalLines = new ArrayList<>();
         //上
@@ -141,15 +143,15 @@ public class BarrageView extends ViewGroup {
         }
         //下
         if (baiwei == 1) {
-            for (int i = firstLine * 2; i < spanCount; i++) {
+            for (int i = firstLine * 2; i < mSpanCount; i++) {
                 legalLines.add(i);
             }
         }
         int bestLine = 0;
         // 如果有空行,将空行返回
-        for (int i = 0; i < spanCount; i++) {
+        for (int i = 0; i < mSpanCount; i++) {
             //空行
-            if (spanList.get(i) == null) {
+            if (mSpanList.get(i) == null) {
                 bestLine = i;
                 if (legalLines.contains(bestLine)) {
                     return bestLine;
@@ -159,10 +161,10 @@ public class BarrageView extends ViewGroup {
 
         float minSpace = Integer.MAX_VALUE;
         // 没有空行，就找最大空间的
-        for (int i = spanCount - 1; i >= 0; i--) {
+        for (int i = mSpanCount - 1; i >= 0; i--) {
             if (legalLines.contains(i)) {
-                if (spanList.get(i).getX() + spanList.get(i).getWidth() <= minSpace) {
-                    minSpace = spanList.get(i).getX() + spanList.get(i).getWidth();
+                if (mSpanList.get(i).getX() + mSpanList.get(i).getWidth() <= minSpace) {
+                    minSpace = mSpanList.get(i).getX() + mSpanList.get(i).getWidth();
                     bestLine = i;
                 }
             }
@@ -186,7 +188,7 @@ public class BarrageView extends ViewGroup {
         //获取最佳行数
         int bestLine = getBestLine();
         // 设置子view位置
-        child.layout(WIDTH, singltLineHeight * bestLine, WIDTH + width, singltLineHeight * bestLine + height);
+        child.layout(WIDTH, mSingleLineHeight * bestLine, WIDTH + width, mSingleLineHeight * bestLine + height);
         InnerEntity innerEntity = null;
         innerEntity = (InnerEntity) child.getTag(R.id.tag_inner_entity);
         if (!isReused || innerEntity == null) {
@@ -195,8 +197,7 @@ public class BarrageView extends ViewGroup {
         innerEntity.model = model;
         innerEntity.bestLine = bestLine;
         child.setTag(R.id.tag_inner_entity, innerEntity);
-
-        spanList.set(bestLine, child);
+        mSpanList.set(bestLine, child);
     }
 
     /**
@@ -205,26 +206,26 @@ public class BarrageView extends ViewGroup {
      * @param model
      */
     public void addDanmu(final BarrageModel model) {
-        if (adapter == null) {
+        if (mAdapter == null) {
             throw new Error("Adapter(an interface need to be implemented) can't be null,you should call setAdapter firstly");
         }
 
         View dmView = null;
-        int cacheSize = adapter.getCacheSize();
+        int cacheSize = mAdapter.getCacheSize();
         if (cacheSize > 0) {
             int type = model.getType();
-            View cacheView = adapter.removeViewFromCache(type);
+            View cacheView = mAdapter.removeViewFromCache(type);
             if (cacheView != null) {
-                Log.e("ViewCacheSize", "复用View后:"+adapter.getCacheSize() + "");
+                Log.e("ViewCacheSize", "复用View后:"+mAdapter.getCacheSize() + "");
                 dmView = cacheView;
                 addTypeView(model, dmView, true);
             } else {
-                dmView = adapter.getView(model, null);
+                dmView = mAdapter.getView(model, null);
                 addTypeView(model, dmView, false);
             }
 
         } else {
-            dmView = adapter.getView(model, null);
+            dmView = mAdapter.getView(model, null);
             addTypeView(model, dmView, false);
         }
 
@@ -239,20 +240,24 @@ public class BarrageView extends ViewGroup {
         });
     }
 
-    private class MyRunnable implements Runnable {
+    /**
+     * 循环轮询，移动发送消息移动子View
+     */
+    private class LoopRunnable implements Runnable {
         @Override
         public void run() {
             int count = 0;
             Message msg = null;
-            while (true) {
+            while (!mIsQuit) {
                 if (count < 7500) {
                     count++;
                 } else {
                     count = 0;
-//                    if (BarrageView.this.getChildCount() < adapter.getCacheSize() / 2) {
-//                        adapter.shrinkCacheSize();
-//                        System.gc();
-//                    }
+                    //收缩缓存
+                    if (BarrageView.this.getChildCount() < mAdapter.getCacheSize() / 2) {
+                        mAdapter.shrinkCacheSize();
+                        Log.e("ViewCacheSize", "shrinkCacheSize后的大小:" + mAdapter.getCacheSize());
+                    }
                 }
                 if (BarrageView.this.getChildCount() >= 0) {
                     msg = new Message();
@@ -267,6 +272,17 @@ public class BarrageView extends ViewGroup {
                 }
             }
 
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        Log.e("ViewCacheSize", "onDetachedFromWindow");
+        mIsQuit = true;
+        mAdapter.clearCache();
+        if(mSpanList != null && mSpanList.size() > 0){
+            mSpanList.clear();
         }
     }
 

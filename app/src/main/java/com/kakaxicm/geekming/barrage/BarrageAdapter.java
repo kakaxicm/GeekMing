@@ -11,15 +11,15 @@ import java.util.Stack;
 public abstract class BarrageAdapter<M> {
 
     // 使用HashMap，以类型和对应view的栈为key-value存储，实现缓存
-    private HashMap<Integer, Stack<View>> cacheViews;
-    private int[] typeArray;
+    private HashMap<Integer, Stack<View>> mCacheViews;
+    private int[] mTypeArray;
 
     public BarrageAdapter() {
-        cacheViews = new HashMap<>();
-        typeArray = getViewTypeArray();
-        for (int i = 0; i < typeArray.length; i++) {
+        mCacheViews = new HashMap<>();
+        mTypeArray = getViewTypeArray();
+        for (int i = 0; i < mTypeArray.length; i++) {
             Stack<View> stack = new Stack<>();
-            cacheViews.put(typeArray[i], stack);
+            mCacheViews.put(mTypeArray[i], stack);
         }
     }
 
@@ -53,8 +53,8 @@ public abstract class BarrageAdapter<M> {
      * @param view
      */
     synchronized public void addViewToCache(int type, View view) {
-        if (cacheViews.containsKey(type)) {
-            cacheViews.get(type).push(view);
+        if (mCacheViews.containsKey(type)) {
+            mCacheViews.get(type).push(view);
         } else {
             throw new Error("your cache has not this type");
         }
@@ -67,8 +67,8 @@ public abstract class BarrageAdapter<M> {
      * @return
      */
     synchronized public View removeViewFromCache(int type) {
-        if (cacheViews.containsKey(type) && cacheViews.get(type).size() > 0)
-            return cacheViews.get(type).pop();
+        if (mCacheViews.containsKey(type) && mCacheViews.get(type).size() > 0)
+            return mCacheViews.get(type).pop();
         else
             return null;
     }
@@ -79,15 +79,24 @@ public abstract class BarrageAdapter<M> {
     synchronized public void shrinkCacheSize() {
         int[] typeArray = getViewTypeArray();
         for (int i = 0; i < typeArray.length; i++) {
-            if (cacheViews.containsKey(typeArray[i])) {
-                Stack<View> typeStack = cacheViews.get(typeArray[i]);
+            if (mCacheViews.containsKey(typeArray[i])) {
+                Stack<View> typeStack = mCacheViews.get(typeArray[i]);
                 int length = typeStack.size();
                 // 循环弹栈，直到大小变为原来一半
                 while (typeStack.size() > (int) (length / 2.0 + 0.5)) {
                     typeStack.pop();
                 }
-                cacheViews.put(typeArray[i], typeStack);
+                mCacheViews.put(typeArray[i], typeStack);
             }
+        }
+    }
+
+    /**
+     * 清除缓存
+     */
+    synchronized public void clearCache(){
+        if(mCacheViews.size() > 0){
+            mCacheViews.clear();
         }
     }
 
@@ -100,7 +109,7 @@ public abstract class BarrageAdapter<M> {
         int size = 0;
         int[] types = getViewTypeArray();
         for (int i = 0; i < types.length; i++) {
-            size = size + cacheViews.get(types[i]).size();
+            size = size + mCacheViews.get(types[i]).size();
         }
         return size;
     }
