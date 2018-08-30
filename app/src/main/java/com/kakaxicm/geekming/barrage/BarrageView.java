@@ -65,7 +65,7 @@ public class BarrageView extends ViewGroup {
                 for (int i = 0; i < BarrageView.this.getChildCount(); i++) {
                     View view = BarrageView.this.getChildAt(i);
                     //view没有完全离开左边屏幕
-                    if (view.getX() + view.getWidth() >= 0) {
+                    if (!isViewLeaveLeftBound(view)) {
 
                         if (!isInWaitingQueue(view)) {//如果View没有在等待队列,则滑动它
                             float x = view.getX();
