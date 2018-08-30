@@ -32,7 +32,6 @@ public class BarrageActivity extends BaseActivity {
     public void sendBarrage(View v){
         ClientBarrageModel danmuEntity = new ClientBarrageModel();
         danmuEntity.setContent(DANMU[random.nextInt(8)]);
-        danmuEntity.setType(random.nextInt(4));
         danmuEntity.setTextColor(Color.YELLOW);
         barrageView.addDanmu(danmuEntity);
     }

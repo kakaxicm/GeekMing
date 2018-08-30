@@ -76,7 +76,7 @@ public abstract class BarrageAdapter<M> {
     /**
      * 减小缓存大小
      */
-    public void shrinkCacheSize() {
+    synchronized public void shrinkCacheSize() {
         int[] typeArray = getViewTypeArray();
         for (int i = 0; i < typeArray.length; i++) {
             if (cacheViews.containsKey(typeArray[i])) {

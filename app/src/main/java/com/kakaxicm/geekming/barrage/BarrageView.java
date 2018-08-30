@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -40,7 +41,7 @@ public class BarrageView extends ViewGroup {
 
     private BarrageAdapter adapter;
 
-    public List<View> spanList;//每一行新加进来的view集合
+    public List<View> spanList;//每一行新加进来的view
 
     private OnItemClickListener onItemClickListener;
 
@@ -57,7 +58,8 @@ public class BarrageView extends ViewGroup {
                     else {
                         //滑出屏幕的View添加到缓存中
                         int type = ((InnerEntity) view.getTag(R.id.tag_inner_entity)).model.getType();
-//                        adapter.addViewToCache(type, view);
+                        adapter.addViewToCache(type, view);
+                        Log.e("ViewCacheSize", "回收View后:"+adapter.getCacheSize() + "");
                         BarrageView.this.removeView(view);
 
                     }
@@ -208,8 +210,24 @@ public class BarrageView extends ViewGroup {
         }
 
         View dmView = null;
-        dmView = adapter.getView(model, null);
-        addTypeView(model, dmView, false);
+        int cacheSize = adapter.getCacheSize();
+        if (cacheSize > 0) {
+            int type = model.getType();
+            View cacheView = adapter.removeViewFromCache(type);
+            if (cacheView != null) {
+                Log.e("ViewCacheSize", "复用View后:"+adapter.getCacheSize() + "");
+                dmView = cacheView;
+                addTypeView(model, dmView, true);
+            } else {
+                dmView = adapter.getView(model, null);
+                addTypeView(model, dmView, false);
+            }
+
+        } else {
+            dmView = adapter.getView(model, null);
+            addTypeView(model, dmView, false);
+        }
+
 
         //添加监听
         dmView.setOnClickListener(new OnClickListener() {
