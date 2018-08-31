@@ -59,6 +59,9 @@
         <activity
             android:name=".activity.AppleSwitchActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.GestureLockActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

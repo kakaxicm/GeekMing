@@ -27,6 +27,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         mCustomViewGroupEntry.setOnClickListener(this);
         findViewById(R.id.ruler_view_entry).setOnClickListener(this);
         findViewById(R.id.ios_switch_entry).setOnClickListener(this);
+        findViewById(R.id.gesture_lock_entry).setOnClickListener(this);
     }
 
     @Override
@@ -53,6 +54,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 intent = new Intent(this, AppleSwitchActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.gesture_lock_entry:
+                intent = new Intent(this, GestureLockActivity.class);
+                startActivity(intent);
             default:
                 break;
         }
