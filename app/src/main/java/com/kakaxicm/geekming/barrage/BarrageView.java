@@ -382,7 +382,6 @@ public class BarrageView extends ViewGroup {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        Log.e("ViewCacheSize", "onDetachedFromWindow");
         mIsQuit = true;
         mAdapter.clearCache();
         if (mSpanList != null && mSpanList.size() > 0) {
