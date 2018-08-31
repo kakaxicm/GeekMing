@@ -26,6 +26,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         mDownloadManagerEntry.setOnClickListener(this);
         mCustomViewGroupEntry.setOnClickListener(this);
         findViewById(R.id.ruler_view_entry).setOnClickListener(this);
+        findViewById(R.id.ios_switch_entry).setOnClickListener(this);
     }
 
     @Override
@@ -46,6 +47,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 break;
             case R.id.ruler_view_entry:
                 intent = new Intent(this, RulerActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.ios_switch_entry:
+                intent = new Intent(this, AppleSwitchActivity.class);
                 startActivity(intent);
                 break;
             default:
