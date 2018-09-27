@@ -9,19 +9,19 @@
         android:id="@+id/common_adapter_entry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Common Adapter Entry" />
+        android:text="通用Adapter" />
 
     <Button
         android:id="@+id/download_manager_entry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Download Manager Entry" />
+        android:text="下载管理" />
 
     <Button
         android:id="@+id/custom_viewgroup_entry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Custom ViewGroup Entry" />
+        android:text="自定义ViewGroup" />
 
     <Button
         android:id="@+id/ruler_view_entry"
