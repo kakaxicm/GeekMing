@@ -254,6 +254,7 @@ public class DownloadManager {
      * 处理失败任务
      * 1.将失败任务从正在下载的任务中移除
      * 2.加入暂停队列
+     * 3.继续调度
      * @param id
      */
     public synchronized void handlerFailedTask(long id) {
@@ -269,6 +270,7 @@ public class DownloadManager {
                 }
             }
         }
+        executeNextTask();
     }
 
     /**

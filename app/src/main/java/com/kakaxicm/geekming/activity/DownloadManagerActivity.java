@@ -55,7 +55,10 @@ public class DownloadManagerActivity extends BaseActivity {
         mUIDownloadInfos = new ArrayList<>();
         for (int i = 0; i < mTaskNames.length; i++) {
             DownloadTaskInfo info = new DownloadTaskInfo(mTaskNames[i], mTaskUrls[i]);
-            info.mLocalPath = StringUtils.getString(DownloadConfig.DOWNLOAD_PATH, MD5Utils.getMD5(info.getmDownloadUrl()), ".apk");
+            String url = info.getmDownloadUrl();
+            int postSuffixIndex = url.lastIndexOf(".");
+            String suffix = url.substring(postSuffixIndex, url.length());
+            info.mLocalPath = StringUtils.getString(DownloadConfig.DOWNLOAD_PATH, MD5Utils.getMD5(info.getmDownloadUrl()), suffix);
             mUIDownloadInfos.add(info);
         }
 

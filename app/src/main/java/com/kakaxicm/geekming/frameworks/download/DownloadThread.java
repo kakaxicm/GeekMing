@@ -113,7 +113,9 @@ public class DownloadThread extends Thread {
                                     mTask.onUpdate((int) (100 * mInfo.mCurrentSize / mInfo.mTotalSize));
                                     bos.reset();
                                     tempLength = 0;
+                                    Thread.sleep(100);
                                 }
+
                             }
 
                             // 因为线程有可能是手动停止，所以循环退出后还是要再写一次文件
