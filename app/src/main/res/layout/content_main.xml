@@ -40,4 +40,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="自定义View-九宫格手势锁"/>
+
+    <Button
+        android:id="@+id/bezier_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自定义View-贝塞尔曲线"/>
+
+
 </LinearLayout>

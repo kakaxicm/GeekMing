@@ -112,23 +112,12 @@ public class BarrageView extends ViewGroup {
     private boolean isInWaitingQueue(View view) {
         Set<Integer> keySet = mWaitingViewsForLine.keySet();
         for (Integer index : keySet) {
-            Queue<View> queue = mWaitingViewsForLine.get(index);
+            LinkedList<View> queue = mWaitingViewsForLine.get(index);
             if (queue != null && queue.contains(view)) {
                 return true;
             }
         }
         return false;
-    }
-
-    private class BackLoopHandler extends Handler {
-        BackLoopHandler(Looper looper) {
-            super(looper);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-
-        }
     }
 
     public BarrageView(Context context) {
@@ -163,11 +152,6 @@ public class BarrageView extends ViewGroup {
                 mWaitingViewsForLine.put(i, new LinkedList<View>());
             }
         }
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-
     }
 
     public void setAdapter(BarrageAdapter adapter) {
@@ -274,7 +258,7 @@ public class BarrageView extends ViewGroup {
             mSpanList.set(bestLine, child);
         } else {
             //如果还没有离开右边界,则将新Child加入等待集合,等待当前行最后发射的View离开右边屏幕
-            Queue<View> views = mWaitingViewsForLine.get(bestLine);
+            LinkedList<View> views = mWaitingViewsForLine.get(bestLine);
             views.add(child);
         }
     }
@@ -388,6 +372,11 @@ public class BarrageView extends ViewGroup {
             mSpanList.clear();
         }
         mWaitingViewsForLine.clear();;
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
     }
 
     class InnerEntity {

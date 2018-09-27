@@ -2,6 +2,7 @@ package com.kakaxicm.geekming.frameworks.download;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 
 /**
@@ -30,7 +31,7 @@ public class DownloadTask {
 
 //    public int mState = 0;
 
-    private Handler mUIHandler = new Handler() {
+    private Handler mUIHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {

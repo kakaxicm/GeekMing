@@ -28,18 +28,18 @@ import java.util.List;
 @ContentViewAnnotation(value = R.layout.activity_download_listview)
 public class DownloadManagerActivity extends BaseActivity {
     private String[] mTaskNames = {
-            "go桌面",
-            "妙仔体",
-            "星星消除",
-            "桃子体",
-            "宇宙体"
+            "印象签",
+            "总裁签",
+            "飘逸签",
+            "豪气签",
+            "心情签"
     };
     private String[] mTaskUrls = {
-            "http://godfs.3g.cn/gosoft/qudao/go_launcher_ex_721.apk",
-            "http://upaicdn.xinmei365.com/newwfs/fontfile/miaozaiti.apk",
-            "http://upaicdn.xinmei365.com/newwfs/support/PopStar2TK_LSY_73_20141023_2.0.0.4.apk",
-            "http://upaicdn.xinmei365.com/wfs/2014-02/9dcfe62769d740629beeb8fc43e052ba.apk",
-            "http://upaicdn.xinmei365.com/newwfs/fontfile/yuzhouti.apk"
+            "https://art-sign-pro.oss-cn-beijing.aliyuncs.com/video/expert_sign/example/V5/impression.mp4",
+            "https://art-sign-pro.oss-cn-beijing.aliyuncs.com/video/expert_sign/example/V5/boss.mp4",
+            "https://art-sign-pro.oss-cn-beijing.aliyuncs.com/video/expert_sign/example/V5/elegant.mp4",
+            "https://art-sign-pro.oss-cn-beijing.aliyuncs.com/video/expert_sign/example/V5/spirit.mp4",
+            "https://art-sign-pro.oss-cn-beijing.aliyuncs.com/video/expert_sign/example/V5/mood.mp4"
     };
 
     @ViewIdAnnotation(value = R.id.download_tasks_container)

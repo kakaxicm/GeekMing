@@ -78,6 +78,7 @@ public class DownloadThread extends Thread {
                 @Override
                 public void processStream(InputStream stream, long totalSize, Header encoding, String newURL) {
                     try {
+                        //初始化本地路径
                         initDownloadDir(mInfo.mLocalPath);
                     } catch (Exception e) {
                         mTask.onFail(e.getMessage());

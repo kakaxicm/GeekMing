@@ -1,6 +1,9 @@
 package com.kakaxicm.geekming.activity;
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
 import com.kakaxicm.geekming.R;
@@ -28,6 +31,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         findViewById(R.id.ruler_view_entry).setOnClickListener(this);
         findViewById(R.id.ios_switch_entry).setOnClickListener(this);
         findViewById(R.id.gesture_lock_entry).setOnClickListener(this);
+        findViewById(R.id.bezier_entry).setOnClickListener(this);
+        checkPermissions();
+    }
+
+    /**
+     * 读写磁盘权限
+     */
+    private void checkPermissions() {
+
+        int REQUEST_EXTERNAL_STORAGE = 1;
+        String[] PERMISSIONS_STORAGE = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        };
+        int permission = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    this,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
 
     @Override
@@ -57,6 +83,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             case R.id.gesture_lock_entry:
                 intent = new Intent(this, GestureLockActivity.class);
                 startActivity(intent);
+            case R.id.bezier_entry:
+                intent = new Intent(this, BezierActivity.class);
+                startActivity(intent);
+
             default:
                 break;
         }

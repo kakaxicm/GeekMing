@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.kakaxicm.geekming.frameworks.download.db.DatabaseManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -35,7 +36,7 @@ public class DownloadManager {
     private int mMaxPoolSize = 5;
     private long mKeepAliveTime = 1L;
 
-    private static DownloadManager mDownloadManager;
+    private static volatile DownloadManager mDownloadManager;
 
     public static DownloadManager getInstance(Context ctx) {
         if (mDownloadManager == null) {
@@ -56,6 +57,10 @@ public class DownloadManager {
         mTaskMap = new HashMap<>();
         mThreadPool = new ThreadPoolExecutor(mCorePoolSize, mMaxPoolSize, mKeepAliveTime, TimeUnit.MILLISECONDS,
                 new ArrayBlockingQueue<Runnable>(mMaxQueueSize));
+        File dir = new File(DownloadConfig.DOWNLOAD_PATH);
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
     }
 
     /**
