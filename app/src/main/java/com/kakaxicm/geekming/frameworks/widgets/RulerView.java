@@ -329,7 +329,7 @@ public class RulerView extends View {
     private void handlerSmoothAction() {
         mVelocityTracker.computeCurrentVelocity(1000);
         float xVelocity = mVelocityTracker.getXVelocity(); //计算水平方向的速度（单位秒）
-        if (Math.abs(xVelocity) > mMinFlingVelocity) {
+        if (Math.abs(xVelocity) > mMinFlingVelocity) {//飞速手势
             mScroller.fling(0, 0, (int) xVelocity, 0, Integer.MIN_VALUE, Integer.MAX_VALUE, 0, 0);
             invalidate();
         } else {
@@ -392,6 +392,7 @@ public class RulerView extends View {
      */
     private void updateValueAndOffset() {
         //更新offset
+        //防止越界
         mOffsetFromValue += mDelta;
         if (mOffsetFromValue < 0) {
             mScroller.forceFinished(true);
