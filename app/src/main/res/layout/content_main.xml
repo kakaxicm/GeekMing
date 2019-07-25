@@ -27,25 +27,30 @@
         android:id="@+id/ruler_view_entry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="自定义View-尺子"/>
+        android:text="自定义View-尺子" />
 
     <Button
         android:id="@+id/ios_switch_entry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="自定义View-仿苹果开关"/>
+        android:text="自定义View-仿苹果开关" />
 
     <Button
         android:id="@+id/gesture_lock_entry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="自定义View-九宫格手势锁"/>
+        android:text="自定义View-九宫格手势锁" />
 
     <Button
         android:id="@+id/bezier_entry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="自定义View-贝塞尔曲线"/>
+        android:text="自定义View-贝塞尔曲线" />
 
+    <Button
+        android:id="@+id/wave_view_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自定义View-波浪球" />
 
 </LinearLayout>

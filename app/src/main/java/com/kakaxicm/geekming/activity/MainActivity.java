@@ -1,4 +1,5 @@
 package com.kakaxicm.geekming.activity;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,7 +13,7 @@ import com.kakaxicm.geekming.frameworks.ioc.annotions.ViewIdAnnotation;
 import com.kakaxicm.geekming.frameworks.widgets.RulerView;
 
 @ContentViewAnnotation(value = R.layout.content_main)
-public class MainActivity extends BaseActivity implements View.OnClickListener{
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @ViewIdAnnotation(value = R.id.common_adapter_entry)
     private View mCommenAdapterEntryView;
@@ -32,6 +33,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         findViewById(R.id.ios_switch_entry).setOnClickListener(this);
         findViewById(R.id.gesture_lock_entry).setOnClickListener(this);
         findViewById(R.id.bezier_entry).setOnClickListener(this);
+        findViewById(R.id.wave_view_entry).setOnClickListener(this);
         checkPermissions();
     }
 
@@ -83,10 +85,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             case R.id.gesture_lock_entry:
                 intent = new Intent(this, GestureLockActivity.class);
                 startActivity(intent);
+                break;
             case R.id.bezier_entry:
                 intent = new Intent(this, BezierActivity.class);
                 startActivity(intent);
-
+                break;
+            case R.id.wave_view_entry:
+                intent = new Intent(this, WaveBallActivity.class);
+                startActivity(intent);
+                break;
             default:
                 break;
         }

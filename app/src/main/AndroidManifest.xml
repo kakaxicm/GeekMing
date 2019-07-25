@@ -66,6 +66,10 @@
         <activity
             android:name=".activity.BezierActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="com.kakaxicm.geekming.activity.WaveBallActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
