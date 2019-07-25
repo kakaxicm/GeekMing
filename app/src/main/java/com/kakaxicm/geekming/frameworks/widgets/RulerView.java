@@ -386,6 +386,10 @@ public class RulerView extends View {
         }
     }
 
+    public float getValue() {
+        return mValue;
+    }
+
 
     /**
      * 更新偏移，重新绘制
