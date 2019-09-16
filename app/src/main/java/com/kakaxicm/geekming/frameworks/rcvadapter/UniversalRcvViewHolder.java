@@ -2,6 +2,7 @@ package com.kakaxicm.geekming.frameworks.rcvadapter;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,7 +22,7 @@ public class UniversalRcvViewHolder extends RecyclerView.ViewHolder{
 
     public static UniversalRcvViewHolder getViewHolder(ViewGroup parent, int layoutId)
     {
-        return new UniversalRcvViewHolder(View.inflate(parent.getContext(), layoutId, null));
+        return new UniversalRcvViewHolder(LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false));
     }
 
     public UniversalRcvViewHolder(View itemView) {

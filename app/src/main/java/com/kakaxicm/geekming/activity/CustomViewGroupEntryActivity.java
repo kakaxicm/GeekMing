@@ -7,6 +7,7 @@ import android.view.View;
 import com.kakaxicm.geekming.R;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ContentViewAnnotation;
 import com.kakaxicm.geekming.frameworks.ioc.annotions.ViewIdAnnotation;
+import com.kakaxicm.geekming.recyclerview.decoration.SlidingHeadRCV;
 
 /**
  * Created by star on 15/12/30.
@@ -35,6 +36,8 @@ public class CustomViewGroupEntryActivity extends BaseActivity {
     private View mMultiScrollEntry;
     @ViewIdAnnotation(R.id.barrage_entry)
     private View mBarrageEntry;
+    @ViewIdAnnotation(R.id.sliding_rcv_entry)
+    private View mSlidingRcvEnrty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class CustomViewGroupEntryActivity extends BaseActivity {
         mScrollerStickyLayoutEntry.setOnClickListener(this);
         mMultiScrollEntry.setOnClickListener(this);
         mBarrageEntry.setOnClickListener(this);
+        mSlidingRcvEnrty.setOnClickListener(this);
     }
 
     @Override
@@ -98,6 +102,10 @@ public class CustomViewGroupEntryActivity extends BaseActivity {
                 break;
             case R.id.barrage_entry:
                 intent.setClass(mContext, BarrageActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.sliding_rcv_entry:
+                intent.setClass(mContext, SlidingHeadRCV.class);
                 startActivity(intent);
                 break;
             default:

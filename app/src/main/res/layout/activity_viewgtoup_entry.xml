@@ -1,72 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/vertical_sliding_title_entry"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Vertical Sliding Title" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/flow_layout_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Flow Layout" />
+        <Button
+            android:id="@+id/vertical_sliding_title_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vertical Sliding Title" />
 
-    <Button
-        android:id="@+id/bubble_imageview_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Shape Bitmap Entry" />
+        <Button
+            android:id="@+id/flow_layout_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Flow Layout" />
 
-    <Button
-        android:id="@+id/behavior_entry1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Behavior Entry1" />
+        <Button
+            android:id="@+id/bubble_imageview_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shape Bitmap Entry" />
 
-    <Button
-        android:id="@+id/behavior_entry2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Behavior Entry2" />
+        <Button
+            android:id="@+id/behavior_entry1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Behavior Entry1" />
 
-    <Button
-        android:id="@+id/floating_head_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="悬浮Head布局" />
+        <Button
+            android:id="@+id/behavior_entry2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Behavior Entry2" />
 
-    <Button
-        android:id="@+id/floating_sticky_viewpager_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="粘性ViewPagerHeader" />
+        <Button
+            android:id="@+id/floating_head_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="悬浮Head布局" />
 
-    <Button
-        android:id="@+id/floating_sticky_card_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Behavior卡片布局" />
+        <Button
+            android:id="@+id/floating_sticky_viewpager_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="粘性ViewPagerHeader" />
 
-    <Button
-        android:id="@+id/scroller_sticky_card_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Scroller实现StickyLayout" />
+        <Button
+            android:id="@+id/floating_sticky_card_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Behavior卡片布局" />
 
-    <Button
-        android:id="@+id/scroller_multi_scroll_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="多重嵌套滚动页面综合" />
+        <Button
+            android:id="@+id/scroller_sticky_card_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scroller实现StickyLayout" />
 
-    <Button
-        android:id="@+id/barrage_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="弹幕效果" />
-</LinearLayout>
+        <Button
+            android:id="@+id/scroller_multi_scroll_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="多重嵌套滚动页面综合" />
+
+        <Button
+            android:id="@+id/barrage_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="弹幕效果" />
+
+        <Button
+            android:id="@+id/sliding_rcv_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="吸顶section" />
+    </LinearLayout>
+</ScrollView>
