@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.kakaxicm.geekming.R;
 import com.kakaxicm.geekming.frameworks.rcvadapter.UniversalRcvAdapter;
 import com.kakaxicm.geekming.frameworks.rcvadapter.UniversalRcvViewHolder;
+import com.kakaxicm.geekming.recyclerview.decoration.TestItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
 /**
  * Created by chenming on 2018/8/22
  */
-public class TestFragment extends Fragment{
+public class TestFragment extends Fragment {
     private View mRootView;
     private RecyclerView mRcv;
 
@@ -49,6 +50,7 @@ public class TestFragment extends Fragment{
         }
 
         mRcv.setLayoutManager(new LinearLayoutManager(container.getContext(), VERTICAL, false));
+        mRcv.addItemDecoration(new TestItemDecoration());
         mRcv.setAdapter(mAdapter);
         return mRootView;
     }
