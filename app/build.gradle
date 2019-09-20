@@ -1,4 +1,54 @@
 apply plugin: 'com.android.application'
+apply plugin: LibPlugin
+println "project.app start"
+project.afterEvaluate {
+    println "project.app.afterEvaluate print"
+}
+project.beforeEvaluate {
+    println "project.app.beforeEvaluate print"
+}
+println "project.app end"
+//自己定义的插件
+//自定义属性
+class LibExtension {
+    String version
+    String message
+}
+/**
+ * 自定义插件 打印自定义属性
+ */
+class LibPlugin implements Plugin<Project> {
+
+    @Override
+    void apply(Project target) {
+        println 'this is lib plugin'
+        //创建 Extension
+        target.extensions.create('libConfig', LibExtension)
+        //创建一个task
+        target.tasks.create("libTask", {
+            doFirst {
+                LibExtension config = project.libConfig
+                println 'doFirst-libTask ' + config.version
+                println 'doFirst-libTask ' + config.message
+            }
+        })
+    }
+}
+
+//自定义配置
+libConfig {
+    version = '1.0'
+    message = 'lib message'
+}
+
+//依赖task
+task A {
+    println "A task"
+}
+
+task B({
+    println "B task"
+}, dependsOn: A)
 
 android {
     compileSdkVersion 27
@@ -15,10 +65,21 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled false
+        }
+//        创建一个构建变种,appid不一样
+        staging.initWith(buildTypes.debug)
+        staging {
+            applicationIdSuffix ".staging"
+            versionNameSuffix "-staging"
+            debuggable = false
+        }
     }
 }
 repositories {
     maven { url 'https://jitpack.io' }
+    mavenLocal()
 }
 
 dependencies {
