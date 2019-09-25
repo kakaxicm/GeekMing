@@ -34,6 +34,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         findViewById(R.id.gesture_lock_entry).setOnClickListener(this);
         findViewById(R.id.bezier_entry).setOnClickListener(this);
         findViewById(R.id.wave_view_entry).setOnClickListener(this);
+        findViewById(R.id.xfermodel).setOnClickListener(this);
         checkPermissions();
     }
 
@@ -92,6 +93,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.wave_view_entry:
                 intent = new Intent(this, WaveBallActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.xfermodel:
+                intent = new Intent(this, XfermodeReLearnActivity.class);
                 startActivity(intent);
                 break;
             default:

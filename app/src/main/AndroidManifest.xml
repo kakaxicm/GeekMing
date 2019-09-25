@@ -20,7 +20,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -72,6 +72,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.kakaxicm.geekming.recyclerview.decoration.SlidingHeadRCV"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="com.kakaxicm.geekming.activity.XfermodeReLearnActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
