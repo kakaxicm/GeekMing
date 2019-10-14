@@ -1,6 +1,7 @@
 package com.qicode.kakaxicm.videolib;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
@@ -384,25 +385,95 @@ public class KVideoPlayer extends FrameLayout implements IKVideoPlayer, TextureV
         return 0;
     }
 
+    /**
+     * 全屏，将mContainer(内部包含mTextureView和mController)从当前容器中移除，并添加到android.R.content中.
+     * 切换横屏时需要在manifest的activity标签下添加android:configChanges="orientation|keyboardHidden|screenSize"配置，
+     * 以避免Activity重新走生命周期
+     */
     @Override
     public void enterFullScreen() {
-        //TODO
+        if (currentMode == MODE_FULL_SCREEN) {
+            return;
+        }
+        // 隐藏ActionBar、状态栏，并横屏
+        KUtil.hideActionBar(context);
+        KUtil.scanForActivity(context)
+                .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        ViewGroup contentView = KUtil.scanForActivity(context)
+                .findViewById(android.R.id.content);
+        if (currentMode == MODE_TINY_WINDOW) {//如果当前是小窗口模式,
+            contentView.removeView(container);
+        } else {
+            removeView(container);
+        }
+
+        LayoutParams params = new LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        contentView.addView(container, params);
+        currentMode = MODE_FULL_SCREEN;
+        mController.onPlayModeChanged(currentMode);
+
     }
 
     @Override
     public boolean exitFullScreen() {
-        //TODO
+        if (currentMode == MODE_FULL_SCREEN) {
+            KUtil.showActionBar(context);
+            KUtil.scanForActivity(context)
+                    .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+            ViewGroup contentView = KUtil.scanForActivity(context)
+                    .findViewById(android.R.id.content);
+            contentView.removeView(container);
+            LayoutParams params = new LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+            this.addView(container, params);
+
+            currentMode = MODE_NORMAL;
+            mController.onPlayModeChanged(currentMode);
+            return true;
+        }
         return false;
     }
 
     @Override
     public void enterTinyWindow() {
-        //TODO
+        if (currentMode == MODE_TINY_WINDOW) return;
+        this.removeView(container);
+
+        ViewGroup contentView = KUtil.scanForActivity(context)
+                .findViewById(android.R.id.content);
+        // 小窗口的宽度为屏幕宽度的60%，长宽比默认为16:9，右边距、下边距为8dp。
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                (int) (KUtil.getScreenWidth(context) * 0.6f),
+                (int) (KUtil.getScreenWidth(context) * 0.6f * 9f / 16f));
+        params.gravity = Gravity.BOTTOM | Gravity.END;
+        params.rightMargin = KUtil.dp2px(context, 8f);
+        params.bottomMargin = KUtil.dp2px(context, 8f);
+
+        contentView.addView(container, params);
+
+        currentMode = MODE_TINY_WINDOW;
+        mController.onPlayModeChanged(currentMode);
     }
 
     @Override
     public boolean exitTinyWindow() {
-        //TODO
+        if (currentMode == MODE_TINY_WINDOW) {
+            ViewGroup contentView = KUtil.scanForActivity(context)
+                    .findViewById(android.R.id.content);
+            contentView.removeView(container);
+            LayoutParams params = new LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+            this.addView(container, params);
+            currentMode = MODE_NORMAL;
+            mController.onPlayModeChanged(currentMode);
+            return true;
+        }
         return false;
     }
 
@@ -516,7 +587,7 @@ public class KVideoPlayer extends FrameLayout implements IKVideoPlayer, TextureV
         @Override
         public void onCompletion(IMediaPlayer iMediaPlayer) {
             currentState = STATE_COMPLETED;
-             mController.onPlayStateChanged(currentState);
+            mController.onPlayStateChanged(currentState);
             // 清除屏幕常亮
             container.setKeepScreenOn(false);
         }

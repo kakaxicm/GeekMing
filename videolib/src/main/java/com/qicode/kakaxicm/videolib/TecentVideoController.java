@@ -340,7 +340,7 @@ public class TecentVideoController extends KVideoController implements View.OnCl
                 break;
             case KVideoPlayer.MODE_FULL_SCREEN:
                 mBack.setVisibility(View.VISIBLE);
-                mFullScreen.setVisibility(View.GONE);
+                mFullScreen.setVisibility(View.VISIBLE);
                 mFullScreen.setImageResource(R.drawable.ic_player_shrink);
                 //TODO
 //                if (clarities != null && clarities.size() > 1) {

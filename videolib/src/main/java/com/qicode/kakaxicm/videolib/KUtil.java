@@ -62,6 +62,7 @@ public class KUtil {
                 .clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
+    @SuppressLint("RestrictedApi")
     public static void hideActionBar(Context context) {
         ActionBar ab = getAppCompActivity(context).getSupportActionBar();
         if (ab != null) {
