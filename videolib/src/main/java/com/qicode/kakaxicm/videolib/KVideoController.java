@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -14,7 +15,7 @@ import java.util.TimerTask;
 /**
  * 控制器ui
  */
-public abstract class KVideoController extends FrameLayout {
+public abstract class KVideoController extends FrameLayout implements View.OnTouchListener {
     protected Context context;
     protected IKVideoPlayer videoPlayer;//绑定的播放器
 
@@ -153,7 +154,7 @@ public abstract class KVideoController extends FrameLayout {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouch(View v, MotionEvent event) {
         //只有全屏时候 才支持手势
         if (videoPlayer == null || !videoPlayer.isFullScreen()) {
             return false;
@@ -210,7 +211,7 @@ public abstract class KVideoController extends FrameLayout {
                     showChangePosition(duration, newPositionProgress);
                 }
 
-                if(mNeedChangeBrightness){
+                if (mNeedChangeBrightness) {
                     float deltaBrightness = deltaY * 3 / getHeight();
                     float newBrightness = mGestureDownBrightness + deltaBrightness;
                     newBrightness = Math.max(0, Math.min(newBrightness, 1));

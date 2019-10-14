@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class TecentVideoController extends KVideoController implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
-
-    private Context mContext;
     private ImageView mImage;
     private ImageView mCenterStart;
 
@@ -113,7 +111,7 @@ public class TecentVideoController extends KVideoController implements View.OnCl
 
     @Override
     protected void init() {
-        LayoutInflater.from(mContext).inflate(R.layout.tx_video_palyer_controller, this, true);
+        LayoutInflater.from(context).inflate(R.layout.tx_video_palyer_controller, this, true);
 
         mCenterStart = findViewById(R.id.center_start);
         mImage = findViewById(R.id.image);
@@ -336,7 +334,7 @@ public class TecentVideoController extends KVideoController implements View.OnCl
                 mClarity.setVisibility(View.GONE);
                 mBatteryTime.setVisibility(View.GONE);
                 if (hasRegisterBatteryReceiver) {
-                    mContext.unregisterReceiver(mBatterReceiver);
+                    context.unregisterReceiver(mBatterReceiver);
                     hasRegisterBatteryReceiver = false;
                 }
                 break;
@@ -350,7 +348,7 @@ public class TecentVideoController extends KVideoController implements View.OnCl
 //                }
                 mBatteryTime.setVisibility(View.VISIBLE);
                 if (!hasRegisterBatteryReceiver) {
-                    mContext.registerReceiver(mBatterReceiver,
+                    context.registerReceiver(mBatterReceiver,
                             new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
                     hasRegisterBatteryReceiver = true;
                 }
@@ -470,7 +468,7 @@ public class TecentVideoController extends KVideoController implements View.OnCl
         } else if (v == mReplay) {
             mRetry.performClick();
         } else if (v == mShare) {
-            Toast.makeText(mContext, "分享", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "分享", Toast.LENGTH_SHORT).show();
         } else if (v == this) {
             if (videoPlayer.isPlaying()
                     || videoPlayer.isPaused()

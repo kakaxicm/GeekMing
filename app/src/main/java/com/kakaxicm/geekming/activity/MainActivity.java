@@ -35,6 +35,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         findViewById(R.id.bezier_entry).setOnClickListener(this);
         findViewById(R.id.wave_view_entry).setOnClickListener(this);
         findViewById(R.id.xfermodel).setOnClickListener(this);
+        findViewById(R.id.video_player).setOnClickListener(this);
+
         checkPermissions();
     }
 
@@ -98,6 +100,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.xfermodel:
                 intent = new Intent(this, XfermodeReLearnActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.video_player:
+                //TODO 视频播放
+                intent = new Intent(this, TinyWindowPlayActivity.class);
+                startActivity(intent);
+
                 break;
             default:
                 break;

@@ -1,60 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/common_adapter_entry"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="通用Adapter" />
+        android:orientation="vertical"
+        android:padding="10dp">
 
-    <Button
-        android:id="@+id/download_manager_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="下载管理" />
+        <Button
+            android:id="@+id/common_adapter_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="通用Adapter" />
 
-    <Button
-        android:id="@+id/custom_viewgroup_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="自定义ViewGroup" />
+        <Button
+            android:id="@+id/download_manager_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="下载管理" />
 
-    <Button
-        android:id="@+id/ruler_view_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="自定义View-尺子" />
+        <Button
+            android:id="@+id/custom_viewgroup_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="自定义ViewGroup" />
 
-    <Button
-        android:id="@+id/ios_switch_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="自定义View-仿苹果开关" />
+        <Button
+            android:id="@+id/ruler_view_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="自定义View-尺子" />
 
-    <Button
-        android:id="@+id/gesture_lock_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="自定义View-九宫格手势锁" />
+        <Button
+            android:id="@+id/ios_switch_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="自定义View-仿苹果开关" />
 
-    <Button
-        android:id="@+id/bezier_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="自定义View-贝塞尔曲线" />
+        <Button
+            android:id="@+id/gesture_lock_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="自定义View-九宫格手势锁" />
 
-    <Button
-        android:id="@+id/wave_view_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="自定义View-波浪球" />
-    <Button
-        android:id="@+id/xfermodel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="xfermodel"/>
-</LinearLayout>
+        <Button
+            android:id="@+id/bezier_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="自定义View-贝塞尔曲线" />
+
+        <Button
+            android:id="@+id/wave_view_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="自定义View-波浪球" />
+
+        <Button
+            android:id="@+id/xfermodel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="xfermodel" />
+
+        <Button
+            android:id="@+id/video_player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="视频播放" />
+    </LinearLayout>
+</ScrollView>
