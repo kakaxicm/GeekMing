@@ -37,9 +37,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         findViewById(R.id.wave_view_entry).setOnClickListener(this);
         findViewById(R.id.xfermodel).setOnClickListener(this);
         findViewById(R.id.video_player).setOnClickListener(this);
-
+        findViewById(R.id.transform).setOnClickListener(this);
         checkPermissions();
-        Log.e("TEST", "" + ~9);
     }
 
     /**
@@ -104,10 +103,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.video_player:
-                //TODO 视频播放
                 intent = new Intent(this, TinyWindowPlayActivity.class);
                 startActivity(intent);
-
+                break;
+            case R.id.transform:
+                intent = new Intent(this, VpTransformActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;

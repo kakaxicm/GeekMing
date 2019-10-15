@@ -84,6 +84,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="可使用小窗口模式播放"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.kakaxicm.geekming.activity.VpTransformActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
