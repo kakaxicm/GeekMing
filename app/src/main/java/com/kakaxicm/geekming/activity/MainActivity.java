@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.View;
 
 import com.kakaxicm.geekming.R;
@@ -38,6 +39,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         findViewById(R.id.video_player).setOnClickListener(this);
 
         checkPermissions();
+        Log.e("TEST", "" + ~9);
     }
 
     /**
