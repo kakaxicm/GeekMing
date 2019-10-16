@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
 
 public class ZoomImageView extends android.support.v7.widget.AppCompatImageView implements ScaleGestureDetector.OnScaleGestureListener, View.OnTouchListener, ViewTreeObserver.OnGlobalLayoutListener {
@@ -23,6 +24,8 @@ public class ZoomImageView extends android.support.v7.widget.AppCompatImageView 
     private boolean once;
     private float initScale = 1.0f;
     private float SCALE_MAX = 4.0f;
+    private boolean isCheckTopAndBottom;
+    private boolean isCheckLeftAndRight;
 
     public ZoomImageView(Context context) {
         this(context, null);
@@ -127,9 +130,108 @@ public class ZoomImageView extends android.support.v7.widget.AppCompatImageView 
         getViewTreeObserver().removeOnGlobalLayoutListener(this);
     }
 
+    private int lastPointerCount;
+    private float lastX;
+    private float lastY;
+    private boolean isCanDrag;
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        return mScaleGestureDetector.onTouchEvent(event);
+        mScaleGestureDetector.onTouchEvent(event);
+        //先取当前的x y
+        float x = 0, y = 0;
+        int pointCount = event.getPointerCount();
+        for (int i = 0; i < pointCount; i++) {
+            x += event.getX(i);
+            y += event.getY(i);
+        }
+
+        x = x / pointCount;
+        y = y / pointCount;
+
+        /**
+         * 每当触摸点发生变化时，重置mLasX , mLastY
+         */
+        if (pointCount != lastPointerCount) {
+            isCanDrag = false;
+            lastX = x;
+            lastY = y;
+        }
+
+        lastPointerCount = pointCount;
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+                float dx = x - lastX;
+                float dy = y - lastY;
+                if (!isCanDrag) {
+                    isCanDrag = isCanDrag(dx, dy);
+                }
+                if (isCanDrag) {
+                    //获取当前的图片范围
+                    RectF rectF = getMatrixRectF();
+                    if (getDrawable() != null) {
+                        isCheckLeftAndRight = isCheckTopAndBottom = true;
+                        if (rectF.width() < getWidth()) {//宽小于屏幕, 禁止水平移动
+                            dx = 0;
+                            isCheckLeftAndRight = false;
+                        }
+
+                        if (rectF.height() < getHeight()) {
+                            dy = 0;
+                            isCheckTopAndBottom = false;
+                        }
+
+                        mScaleMatrix.postTranslate(dx, dy);
+                        //边界限定
+                        checkMatrixBounds();
+                        setImageMatrix(mScaleMatrix);
+                    }
+                }
+                lastX = x;
+                lastY = y;
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                lastPointerCount = 0;
+                lastX = 0;
+                lastY = 0;
+                isCanDrag = false;
+                break;
+        }
+        return true;
+    }
+
+    /**
+     * 宽或者高大于屏幕的时候,避免边界留白
+     */
+    private void checkMatrixBounds() {
+        final RectF rect = getMatrixRectF();
+        float deltaX = 0, deltaY = 0;
+        final float viewWidth = getWidth();
+        final float viewHeight = getHeight();
+
+        if (rect.left > 0 && isCheckLeftAndRight) {
+            deltaX = -rect.left;
+        }
+
+        if (rect.right < viewWidth && isCheckLeftAndRight) {
+            deltaX = viewWidth - rect.right;
+        }
+
+        if (rect.top > 0 && isCheckTopAndBottom) {
+            deltaY = -rect.top;
+        }
+        if (rect.bottom < viewHeight && isCheckTopAndBottom) {
+            deltaY = viewHeight - rect.bottom;
+        }
+
+        mScaleMatrix.postTranslate(deltaX, deltaY);
+    }
+
+
+    private boolean isCanDrag(float dx, float dy) {
+        return Math.sqrt((dx * dx) + (dy * dy)) >= ViewConfiguration.getTouchSlop();
     }
 
     public float getScale() {
