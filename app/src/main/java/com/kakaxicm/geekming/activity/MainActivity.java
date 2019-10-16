@@ -38,6 +38,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         findViewById(R.id.xfermodel).setOnClickListener(this);
         findViewById(R.id.video_player).setOnClickListener(this);
         findViewById(R.id.transform).setOnClickListener(this);
+        findViewById(R.id.zoom_img).setOnClickListener(this);
         checkPermissions();
     }
 
@@ -108,6 +109,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.transform:
                 intent = new Intent(this, VpTransformActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.zoom_img:
+                intent = new Intent(this, ZoomImgActivity.class);
                 startActivity(intent);
                 break;
             default:

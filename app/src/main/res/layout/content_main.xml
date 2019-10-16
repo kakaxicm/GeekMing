@@ -75,5 +75,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="transform" />
+
+        <Button
+            android:id="@+id/zoom_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="图片裁剪" />
     </LinearLayout>
 </ScrollView>
